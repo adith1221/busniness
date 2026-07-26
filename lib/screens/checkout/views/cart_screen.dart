@@ -40,7 +40,8 @@ class CartScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const Spacer(),
-                  Text('${cartItems.length} items', style: Theme.of(context).textTheme.bodyMedium),
+                  Text('${cartItems.length} items',
+                      style: Theme.of(context).textTheme.bodyMedium),
                 ],
               ),
             ),
@@ -48,7 +49,8 @@ class CartScreen extends StatelessWidget {
               child: ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 itemCount: cartItems.length,
-                separatorBuilder: (_, __) => const SizedBox(height: defaultPadding),
+                separatorBuilder: (_, __) =>
+                    const SizedBox(height: defaultPadding),
                 itemBuilder: (context, index) {
                   final item = cartItems[index];
                   return Container(
@@ -69,11 +71,14 @@ class CartScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(item.brandName.toUpperCase(), style: Theme.of(context).textTheme.bodySmall),
+                              Text(item.brandName.toUpperCase(),
+                                  style: Theme.of(context).textTheme.bodySmall),
                               const SizedBox(height: 4),
-                              Text(item.title, maxLines: 2, overflow: TextOverflow.ellipsis),
+                              Text(item.title,
+                                  maxLines: 2, overflow: TextOverflow.ellipsis),
                               const SizedBox(height: 8),
-                              Text('\$${item.priceAfetDiscount?.toStringAsFixed(0) ?? item.price.toStringAsFixed(0)}'),
+                              Text(
+                                  '₹${item.priceAfetDiscount?.toStringAsFixed(0) ?? item.price.toStringAsFixed(0)}'),
                             ],
                           ),
                         ),
@@ -113,14 +118,21 @@ class CartScreen extends StatelessWidget {
     );
   }
 
-  Widget _summaryRow(BuildContext context, String label, double value, {bool isTotal = false}) {
+  Widget _summaryRow(BuildContext context, String label, double value,
+      {bool isTotal = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          Text(label, style: isTotal ? Theme.of(context).textTheme.titleSmall : Theme.of(context).textTheme.bodyMedium),
+          Text(label,
+              style: isTotal
+                  ? Theme.of(context).textTheme.titleSmall
+                  : Theme.of(context).textTheme.bodyMedium),
           const Spacer(),
-          Text('\$${value.toStringAsFixed(0)}', style: isTotal ? Theme.of(context).textTheme.titleSmall : Theme.of(context).textTheme.bodyMedium),
+          Text('₹${value.toStringAsFixed(0)}',
+              style: isTotal
+                  ? Theme.of(context).textTheme.titleSmall
+                  : Theme.of(context).textTheme.bodyMedium),
         ],
       ),
     );

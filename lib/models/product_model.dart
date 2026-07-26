@@ -1,8 +1,18 @@
 // For demo only
 import 'package:busniness/constants.dart';
 
+String _stringOrFallback(dynamic value, String fallback) {
+  final text = value as String?;
+  if (text == null || text.trim().isEmpty) {
+    return fallback;
+  }
+  return text;
+}
+
 class ProductModel {
   final String image, brandName, title;
+  final List<String> images;
+  final String? shopifyId;
   final double price;
   final double? priceAfetDiscount;
   final int? dicountpercent;
@@ -13,27 +23,41 @@ class ProductModel {
     required this.brandName,
     required this.title,
     required this.price,
+    this.images = const [],
+    this.shopifyId,
     this.priceAfetDiscount,
     this.dicountpercent,
     this.description,
   });
 
   factory ProductModel.fromShopifyMap(Map<String, dynamic> data) {
-    final title = (data['title'] as String?) ?? 'Untitled product';
-    final brandName = (data['vendor'] as String?) ?? 'Shopify Store';
-    final image = (data['imageUrl'] as String?) ?? productDemoImg1;
+    final title = _stringOrFallback(data['title'], 'Untitled product');
+    final brandName = _stringOrFallback(data['vendor'], 'Shopify Store');
+
+    final rawImages = (data['images'] as List<dynamic>? ?? const [])
+        .whereType<String>()
+        .where((url) => url.trim().isNotEmpty)
+        .toList();
+
+    final imageUrl = _stringOrFallback(data['imageUrl'], productDemoImg1);
+    final image = rawImages.isNotEmpty ? rawImages.first : imageUrl;
+
     final price = (data['price'] as num?)?.toDouble() ?? 0.0;
-    final salePrice = (data['salePrice'] as num?)?.toDouble() ?? price;
+    final salePrice = (data['salePrice'] as num?)?.toDouble();
     final discountPercent = data['discountPercent'] as int?;
     final description = data['description'] as String?;
 
+    final hasDiscount = salePrice != null && salePrice > 0 && salePrice < price;
+
     return ProductModel(
       image: image,
+      images: rawImages.isNotEmpty ? rawImages : [image],
+      shopifyId: data['shopifyId'] as String?,
       brandName: brandName,
       title: title,
       price: price,
-      priceAfetDiscount: salePrice > 0 ? salePrice : price,
-      dicountpercent: discountPercent,
+      priceAfetDiscount: hasDiscount ? salePrice : null,
+      dicountpercent: hasDiscount ? discountPercent : null,
       description: description,
     );
   }
@@ -87,6 +111,7 @@ List<ProductModel> demoPopularProducts = [
     dicountpercent: 5,
   ),
 ];
+
 List<ProductModel> demoFlashSaleProducts = [
   ProductModel(
     image: productDemoImg5,
@@ -113,6 +138,7 @@ List<ProductModel> demoFlashSaleProducts = [
     dicountpercent: 15,
   ),
 ];
+
 List<ProductModel> demoBestSellersProducts = [
   ProductModel(
     image: "https://i.imgur.com/tXyOMMG.png",
@@ -139,6 +165,7 @@ List<ProductModel> demoBestSellersProducts = [
     dicountpercent: 15,
   ),
 ];
+
 List<ProductModel> kidsProducts = [
   ProductModel(
     image: "https://i.imgur.com/dbbT6PA.png",

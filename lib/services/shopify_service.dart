@@ -71,6 +71,7 @@ class ShopifyService {
             final node = (edge as Map<String, dynamic>)['node']
                     as Map<String, dynamic>? ??
                 <String, dynamic>{};
+
             return ShopifyCollection(
               handle: (node['handle'] as String?) ?? '',
               title: (node['title'] as String?) ?? 'Collection',
@@ -118,6 +119,14 @@ class ShopifyService {
                       url
                       altText
                     }
+                    images(first: 10) {
+                      edges {
+                        node {
+                          url
+                          altText
+                        }
+                      }
+                    }
                     variants(first: 1) {
                       edges {
                         node {
@@ -156,6 +165,7 @@ class ShopifyService {
         final node =
             (edge as Map<String, dynamic>)['node'] as Map<String, dynamic>? ??
                 <String, dynamic>{};
+
         final variantEdge =
             ((node['variants']?['edges'] as List<dynamic>?) ?? const [])
                     .isNotEmpty
@@ -163,25 +173,31 @@ class ShopifyService {
                         as Map<String, dynamic>? ??
                     <String, dynamic>{}
                 : <String, dynamic>{};
+
         final variant = (variantEdge['node'] as Map<String, dynamic>? ??
             <String, dynamic>{});
+
         final priceMap =
             variant['price'] as Map<String, dynamic>? ?? <String, dynamic>{};
         final compareAtPriceMap =
             variant['compareAtPrice'] as Map<String, dynamic>? ??
                 <String, dynamic>{};
-        final price = _readMoney(priceMap['amount']);
+
+        final currentPrice = _readMoney(priceMap['amount']);
         final compareAtPrice = _readMoney(compareAtPriceMap['amount']);
+        final hasDiscount = compareAtPrice > currentPrice && compareAtPrice > 0;
 
         return ProductModel.fromShopifyMap({
+          'shopifyId': node['id'],
           'title': node['title'],
           'vendor': node['vendor'],
           'description': node['descriptionHtml'],
-          'imageUrl': node['featuredImage']?['url'],
-          'price': price,
-          'salePrice': compareAtPrice > 0 ? compareAtPrice : price,
-          'discountPercent': compareAtPrice > price && compareAtPrice > 0
-              ? ((1 - (price / compareAtPrice)) * 100).round()
+          'imageUrl': _readFirstImageUrl(node),
+          'images': _readImageUrls(node),
+          'price': hasDiscount ? compareAtPrice : currentPrice,
+          'salePrice': hasDiscount ? currentPrice : null,
+          'discountPercent': hasDiscount
+              ? ((1 - (currentPrice / compareAtPrice)) * 100).round()
               : null,
         });
       }).toList();
@@ -224,6 +240,14 @@ class ShopifyService {
                     url
                     altText
                   }
+                  images(first: 10) {
+                    edges {
+                      node {
+                        url
+                        altText
+                      }
+                    }
+                  }
                   variants(first: 1) {
                     edges {
                       node {
@@ -263,6 +287,7 @@ class ShopifyService {
         final node =
             (edge as Map<String, dynamic>)['node'] as Map<String, dynamic>? ??
                 <String, dynamic>{};
+
         final variantEdge =
             ((node['variants']?['edges'] as List<dynamic>?) ?? const [])
                     .isNotEmpty
@@ -270,25 +295,31 @@ class ShopifyService {
                         as Map<String, dynamic>? ??
                     <String, dynamic>{}
                 : <String, dynamic>{};
+
         final variant = (variantEdge['node'] as Map<String, dynamic>? ??
             <String, dynamic>{});
+
         final priceMap =
             variant['price'] as Map<String, dynamic>? ?? <String, dynamic>{};
         final compareAtPriceMap =
             variant['compareAtPrice'] as Map<String, dynamic>? ??
                 <String, dynamic>{};
-        final price = _readMoney(priceMap['amount']);
+
+        final currentPrice = _readMoney(priceMap['amount']);
         final compareAtPrice = _readMoney(compareAtPriceMap['amount']);
+        final hasDiscount = compareAtPrice > currentPrice && compareAtPrice > 0;
 
         return ProductModel.fromShopifyMap({
+          'shopifyId': node['id'],
           'title': node['title'],
           'vendor': node['vendor'],
           'description': node['descriptionHtml'],
-          'imageUrl': node['featuredImage']?['url'],
-          'price': price,
-          'salePrice': compareAtPrice > 0 ? compareAtPrice : price,
-          'discountPercent': compareAtPrice > price && compareAtPrice > 0
-              ? ((1 - (price / compareAtPrice)) * 100).round()
+          'imageUrl': _readFirstImageUrl(node),
+          'images': _readImageUrls(node),
+          'price': hasDiscount ? compareAtPrice : currentPrice,
+          'salePrice': hasDiscount ? currentPrice : null,
+          'discountPercent': hasDiscount
+              ? ((1 - (currentPrice / compareAtPrice)) * 100).round()
               : null,
         });
       }).toList();
@@ -307,5 +338,54 @@ class ShopifyService {
       return double.tryParse(value) ?? 0.0;
     }
     return 0.0;
+  }
+
+  String _readFirstImageUrl(Map<String, dynamic> node) {
+    final images = _readImageUrls(node);
+    if (images.isNotEmpty) {
+      return images.first;
+    }
+
+    final featured = node['featuredImage'];
+    if (featured is Map<String, dynamic>) {
+      final url = featured['url'] as String?;
+      if (url != null && url.trim().isNotEmpty) {
+        return url;
+      }
+    }
+
+    return '';
+  }
+
+  List<String> _readImageUrls(Map<String, dynamic> node) {
+    final urls = <String>[];
+
+    final images = node['images'];
+    if (images is Map<String, dynamic>) {
+      final edges = images['edges'] as List<dynamic>? ?? const [];
+      for (final edge in edges) {
+        if (edge is Map<String, dynamic>) {
+          final imageNode = edge['node'];
+          if (imageNode is Map<String, dynamic>) {
+            final url = imageNode['url'] as String?;
+            if (url != null && url.trim().isNotEmpty && !urls.contains(url)) {
+              urls.add(url);
+            }
+          }
+        }
+      }
+    }
+
+    if (urls.isEmpty) {
+      final featured = node['featuredImage'];
+      if (featured is Map<String, dynamic>) {
+        final url = featured['url'] as String?;
+        if (url != null && url.trim().isNotEmpty) {
+          urls.add(url);
+        }
+      }
+    }
+
+    return urls;
   }
 }

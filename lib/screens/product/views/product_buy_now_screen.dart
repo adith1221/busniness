@@ -25,10 +25,25 @@ class ProductBuyNowScreen extends StatefulWidget {
 }
 
 class _ProductBuyNowScreenState extends State<ProductBuyNowScreen> {
+  int numOfItem = 1;
+
+  void incrementQty() {
+    setState(() {
+      numOfItem++;
+    });
+  }
+
+  void decrementQty() {
+    if (numOfItem > 1) {
+      setState(() {
+        numOfItem--;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final product =
-        widget.product ??
+    final product = widget.product ??
         ProductModel(
           image: '',
           brandName: 'Shopify',
@@ -36,9 +51,12 @@ class _ProductBuyNowScreenState extends State<ProductBuyNowScreen> {
           price: 0,
         );
 
+    final unitPrice = product.priceAfetDiscount ?? product.price;
+    final totalPrice = unitPrice * numOfItem;
+
     return Scaffold(
       bottomNavigationBar: CartButton(
-        price: product.priceAfetDiscount ?? product.price,
+        price: totalPrice,
         title: "Add to cart",
         subTitle: "Total price",
         press: () {
@@ -100,14 +118,13 @@ class _ProductBuyNowScreenState extends State<ProductBuyNowScreen> {
                         Expanded(
                           child: UnitPrice(
                             price: product.price,
-                            priceAfterDiscount:
-                                product.priceAfetDiscount ?? product.price,
+                            priceAfterDiscount: unitPrice,
                           ),
                         ),
                         ProductQuantity(
-                          numOfItem: 2,
-                          onIncrement: () {},
-                          onDecrement: () {},
+                          numOfItem: numOfItem,
+                          onIncrement: incrementQty,
+                          onDecrement: decrementQty,
                         ),
                       ],
                     ),

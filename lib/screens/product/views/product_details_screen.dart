@@ -7,8 +7,8 @@ import 'package:busniness/components/product/product_card.dart';
 import 'package:busniness/constants.dart';
 import 'package:busniness/models/product_model.dart';
 import 'package:busniness/screens/product/views/product_returns_screen.dart';
-
 import 'package:busniness/route/screen_export.dart';
+import 'package:busniness/services/shopify_service.dart';
 
 import 'components/notify_me_card.dart';
 import 'components/product_images.dart';
@@ -29,18 +29,28 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selectedProduct =
-        product ??
+    final selectedProduct = product ??
         ProductModel(
           image: '',
           brandName: 'Shopify',
           title: 'Product',
           price: 0,
+          images: const [],
         );
+
+    final galleryImages = selectedProduct.images.isNotEmpty
+        ? selectedProduct.images
+        : (selectedProduct.image.isNotEmpty
+            ? [selectedProduct.image]
+            : [productDemoImg1]);
+
+    final shopifyService = ShopifyService();
+    final relatedProductsFuture = shopifyService.fetchProducts(first: 12);
+
     return Scaffold(
       bottomNavigationBar: isProductAvailable
           ? CartButton(
-              price: 140,
+              price: selectedProduct.priceAfetDiscount ?? selectedProduct.price,
               press: () {
                 customModalBottomSheet(
                   context,
@@ -50,8 +60,9 @@ class ProductDetailsScreen extends StatelessWidget {
               },
             )
           :
-            /// If profuct is not available then show [NotifyMeCard]
-            NotifyMeCard(isNotify: false, onChanged: (value) {}),
+
+          /// If profuct is not available then show [NotifyMeCard]
+          NotifyMeCard(isNotify: false, onChanged: (value) {}),
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -71,15 +82,12 @@ class ProductDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            ProductImages(
-              images: [selectedProduct.image, productDemoImg2, productDemoImg3],
-            ),
+            ProductImages(images: galleryImages),
             ProductInfo(
               brand: selectedProduct.brandName.toUpperCase(),
               title: selectedProduct.title,
               isAvailable: isProductAvailable,
-              description:
-                  selectedProduct.description ??
+              description: selectedProduct.description ??
                   "A cool gray cap in soft corduroy. Watch me.' By buying cotton products from Lindex, you’re supporting more responsibly...",
               rating: 4.4,
               numOfReviews: 126,
@@ -154,27 +162,71 @@ class ProductDetailsScreen extends StatelessWidget {
               ),
             ),
             SliverToBoxAdapter(
-              child: SizedBox(
-                height: 220,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 5,
-                  itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.only(
-                      left: defaultPadding,
-                      right: index == 4 ? defaultPadding : 0,
+              child: FutureBuilder<List<ProductModel>>(
+                future: relatedProductsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const SizedBox(
+                      height: 220,
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+
+                  final products = snapshot.data ?? [];
+
+                  bool isCurrentProduct(ProductModel item) {
+                    if (selectedProduct.shopifyId != null &&
+                        item.shopifyId != null) {
+                      return item.shopifyId == selectedProduct.shopifyId;
+                    }
+                    return item.title == selectedProduct.title &&
+                        item.brandName == selectedProduct.brandName;
+                  }
+
+                  final relatedProducts = products
+                      .where((item) => !isCurrentProduct(item))
+                      .take(5)
+                      .toList();
+
+                  if (relatedProducts.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return SizedBox(
+                    height: 220,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: relatedProducts.length,
+                      itemBuilder: (context, index) => Padding(
+                        padding: EdgeInsets.only(
+                          left: defaultPadding,
+                          right: index == relatedProducts.length - 1
+                              ? defaultPadding
+                              : 0,
+                        ),
+                        child: ProductCard(
+                          image: relatedProducts[index].image,
+                          title: relatedProducts[index].title,
+                          brandName: relatedProducts[index].brandName,
+                          price: relatedProducts[index].price,
+                          priceAfetDiscount:
+                              relatedProducts[index].priceAfetDiscount,
+                          dicountpercent: relatedProducts[index].dicountpercent,
+                          press: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProductDetailsScreen(
+                                  product: relatedProducts[index],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                    child: ProductCard(
-                      image: productDemoImg2,
-                      title: "Sleeveless Tiered Dobby Swing Dress",
-                      brandName: "LIPSY LONDON",
-                      price: 24.65,
-                      priceAfetDiscount: index.isEven ? 20.99 : null,
-                      dicountpercent: index.isEven ? 25 : null,
-                      press: () {},
-                    ),
-                  ),
-                ),
+                  );
+                },
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: defaultPadding)),

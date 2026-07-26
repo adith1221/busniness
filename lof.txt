@@ -1,0 +1,49 @@
+Launching lib/main.dart on 2312DRA50I in debug mode...
+Running Gradle task 'assembleDebug'...                           1,688ms
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...       
+I/FlutterActivityAndFragmentDelegate(12987): If you are attempting to set --enable-dart-profiling via Intent extras to launch a Flutter component outside of using the Flutter CLI, note that support for setting engine flags on Android via Intent will soon be dropped; see https://github.com/flutter/flutter/issues/180686 for more information on this breaking change. To migrate, set --enable-dart-profiling or any other flags specified via Intent extras on the command line instead or see https://github.com/flutter/flutter/blob/main/docs/engine/Flutter-Android-Engine-Flags.md for alternative methods.
+D/FlutterJNI(12987): Beginning load of flutter...
+D/FlutterJNI(12987): flutter (null) was loaded normally!
+I/flutter (12987): [IMPORTANT:flutter/shell/platform/android/android_context_vk_impeller.cc(62)] Using the Impeller rendering backend (Vulkan).
+D/FlutterRenderer(12987): Width is zero. 0,0
+D/FlutterRenderer(12987): Width is zero. 0,0
+D/FlutterJNI(12987): Sending viewport metrics to the engine.
+D/FlutterJNI(12987): Sending viewport metrics to the engine.
+D/FlutterJNI(12987): Sending viewport metrics to the engine.
+W/FlutterLoader(16672): If you are trying to specify io.flutter.embedding.engine.loader.FlutterLoader.aot-shared-library-name in your application manifest, please make sure to use the new metadata key name: io.flutter.embedding.android.AOTSharedLibraryName
+E/FlutterLoader(16672): External path /libandroid_release_android_library_flutter_artifacts.so rejected; not overriding aot-shared-library-name.
+E/FlutterLoader(16672): Skipping unsafe AOT shared library name flag: libandroid_release_android_library_flutter_artifacts.so. Please ensure that the library is vetted and placed in your application's internal storage.
+W/FlutterLoader(16672): If you are trying to specify io.flutter.embedding.engine.loader.FlutterLoader.flutter-assets-dir in your application manifest, please make sure to use the new metadata key name: io.flutter.embedding.android.FlutterAssetsDir
+I/flutter (16672): [IMPORTANT:flutter/shell/common/shell.cc(528)] [Action Required]: Impeller opt-out deprecated.
+I/flutter (16672):     The application opted out of Impeller by either using the
+I/flutter (16672):     `--no-enable-impeller` flag or the
+I/flutter (16672):     `io.flutter.embedding.android.EnableImpeller` `AndroidManifest.xml` entry.
+I/flutter (16672):     These options are going to go away in an upcoming Flutter release. Remove
+I/flutter (16672):     the explicit opt-out. If you need to opt-out, please report a bug describing
+I/flutter (16672):     the issue.
+I/flutter (16672): 
+I/flutter (16672):     https://github.com/flutter/flutter/issues/new?template=02_bug.yml
+I/flutter (16672): 
+W/flutter-plugin-(16672): type=1400 audit(0.0:4703654): avc:  granted  { execute } for  path="/data/data/com.google.android.apps.nbu.paisa.user/app_pccache2/5/C261F5452FADA828A0BEBA37A55BDC37FE758C0A/pcam.jar" dev="dm-56" ino=1961151 scontext=u:r:untrusted_app:s0:c148,c257,c512,c768 tcontext=u:object_r:app_data_file:s0:c148,c257,c512,c768 tclass=file app=com.google.android.apps.nbu.paisa.user
+I/flutter (12987): [IMPORTANT:flutter/shell/platform/android/android_context_vk_impeller.cc(62)] Using the Impeller rendering backend (Vulkan).
+D/FlutterRenderer(12987): Width is zero. 0,0
+D/FlutterRenderer(12987): Width is zero. 0,0
+D/FlutterJNI(12987): Sending viewport metrics to the engine.
+D/FlutterJNI(12987): Sending viewport metrics to the engine.
+D/FlutterJNI(12987): Sending viewport metrics to the engine.
+W/FlutterLoader(17213): If you are trying to specify io.flutter.embedding.engine.loader.FlutterLoader.aot-shared-library-name in your application manifest, please make sure to use the new metadata key name: io.flutter.embedding.android.AOTSharedLibraryName
+E/FlutterLoader(17213): External path /libandroid_release_android_library_flutter_artifacts.so rejected; not overriding aot-shared-library-name.
+E/FlutterLoader(17213): Skipping unsafe AOT shared library name flag: libandroid_release_android_library_flutter_artifacts.so. Please ensure that the library is vetted and placed in your application's internal storage.
+W/FlutterLoader(17213): If you are trying to specify io.flutter.embedding.engine.loader.FlutterLoader.flutter-assets-dir in your application manifest, please make sure to use the new metadata key name: io.flutter.embedding.android.FlutterAssetsDir
+I/flutter (17213): [IMPORTANT:flutter/shell/common/shell.cc(528)] [Action Required]: Impeller opt-out deprecated.
+I/flutter (17213):     The application opted out of Impeller by either using the
+I/flutter (17213):     `--no-enable-impeller` flag or the
+I/flutter (17213):     `io.flutter.embedding.android.EnableImpeller` `AndroidManifest.xml` entry.
+I/flutter (17213):     These options are going to go away in an upcoming Flutter release. Remove
+I/flutter (17213):     the explicit opt-out. If you need to opt-out, please report a bug describing
+I/flutter (17213):     the issue.
+I/flutter (17213): 
+I/flutter (17213):     https://github.com/flutter/flutter/issues/new?template=02_bug.yml
+I/flutter (17213): 
+Installing build/app/outputs/flutter-apk/app-debug.apk...          27.8s

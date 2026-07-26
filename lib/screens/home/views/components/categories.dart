@@ -1,66 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shop/route/screen_export.dart';
+import 'package:busniness/route/route_constants.dart';
+import 'package:busniness/services/shopify_service.dart';
 
 import '../../../../constants.dart';
 
-// For preview
-class CategoryModel {
-  final String name;
-  final String? svgSrc, route;
+class Categories extends StatefulWidget {
+  const Categories({super.key});
 
-  CategoryModel({
-    required this.name,
-    this.svgSrc,
-    this.route,
-  });
+  @override
+  State<Categories> createState() => _CategoriesState();
 }
 
-List<CategoryModel> demoCategories = [
-  CategoryModel(name: "All Categories"),
-  CategoryModel(
-      name: "On Sale",
-      svgSrc: "assets/icons/Sale.svg",
-      route: onSaleScreenRoute),
-  CategoryModel(name: "Man's", svgSrc: "assets/icons/Man.svg"),
-  CategoryModel(name: "Woman’s", svgSrc: "assets/icons/Woman.svg"),
-  CategoryModel(
-      name: "Kids", svgSrc: "assets/icons/Child.svg", route: kidsScreenRoute),
-];
-// End For Preview
+class _CategoriesState extends State<Categories> {
+  late Future<List<ShopifyCollection>> _collectionsFuture;
 
-class Categories extends StatelessWidget {
-  const Categories({
-    super.key,
-  });
+  @override
+  void initState() {
+    super.initState();
+    _collectionsFuture = ShopifyService().fetchCollections();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          ...List.generate(
-            demoCategories.length,
-            (index) => Padding(
-              padding: EdgeInsets.only(
-                  left: index == 0 ? defaultPadding : defaultPadding / 2,
-                  right:
-                      index == demoCategories.length - 1 ? defaultPadding : 0),
-              child: CategoryBtn(
-                category: demoCategories[index].name,
-                svgSrc: demoCategories[index].svgSrc,
-                isActive: index == 0,
-                press: () {
-                  if (demoCategories[index].route != null) {
-                    Navigator.pushNamed(context, demoCategories[index].route!);
-                  }
-                },
+    return FutureBuilder<List<ShopifyCollection>>(
+      future: _collectionsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox(height: 36);
+        }
+
+        final collections = snapshot.data ?? <ShopifyCollection>[];
+        if (collections.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              ...List.generate(
+                collections.length,
+                (index) => Padding(
+                  padding: EdgeInsets.only(
+                    left: index == 0 ? defaultPadding : defaultPadding / 2,
+                    right: index == collections.length - 1 ? defaultPadding : 0,
+                  ),
+                  child: CategoryBtn(
+                    category: collections[index].title,
+                    svgSrc: null,
+                    isActive: index == 0,
+                    press: () {
+                      Navigator.pushNamed(
+                        context,
+                        collectionProductsScreenRoute,
+                        arguments: collections[index].handle,
+                      );
+                    },
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -90,9 +93,10 @@ class CategoryBtn extends StatelessWidget {
         decoration: BoxDecoration(
           color: isActive ? primaryColor : Colors.transparent,
           border: Border.all(
-              color: isActive
-                  ? Colors.transparent
-                  : Theme.of(context).dividerColor),
+            color: isActive
+                ? Colors.transparent
+                : Theme.of(context).dividerColor,
+          ),
           borderRadius: const BorderRadius.all(Radius.circular(30)),
         ),
         child: Row(

@@ -1,11 +1,12 @@
 // For demo only
-import 'package:shop/constants.dart';
+import 'package:busniness/constants.dart';
 
 class ProductModel {
   final String image, brandName, title;
   final double price;
   final double? priceAfetDiscount;
   final int? dicountpercent;
+  final String? description;
 
   ProductModel({
     required this.image,
@@ -14,7 +15,28 @@ class ProductModel {
     required this.price,
     this.priceAfetDiscount,
     this.dicountpercent,
+    this.description,
   });
+
+  factory ProductModel.fromShopifyMap(Map<String, dynamic> data) {
+    final title = (data['title'] as String?) ?? 'Untitled product';
+    final brandName = (data['vendor'] as String?) ?? 'Shopify Store';
+    final image = (data['imageUrl'] as String?) ?? productDemoImg1;
+    final price = (data['price'] as num?)?.toDouble() ?? 0.0;
+    final salePrice = (data['salePrice'] as num?)?.toDouble() ?? price;
+    final discountPercent = data['discountPercent'] as int?;
+    final description = data['description'] as String?;
+
+    return ProductModel(
+      image: image,
+      brandName: brandName,
+      title: title,
+      price: price,
+      priceAfetDiscount: salePrice > 0 ? salePrice : price,
+      dicountpercent: discountPercent,
+      description: description,
+    );
+  }
 }
 
 List<ProductModel> demoPopularProducts = [

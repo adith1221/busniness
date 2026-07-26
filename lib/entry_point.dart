@@ -1,8 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shop/constants.dart';
-import 'package:shop/route/screen_export.dart';
+import 'package:busniness/constants.dart';
+import 'package:busniness/route/screen_export.dart';
 
 class EntryPoint extends StatefulWidget {
   const EntryPoint({super.key});
@@ -30,8 +30,8 @@ class _EntryPointState extends State<EntryPoint> {
         height: 24,
         colorFilter: ColorFilter.mode(
             color ??
-                Theme.of(context).iconTheme.color!.withOpacity(
-                    Theme.of(context).brightness == Brightness.dark ? 0.3 : 1),
+                Theme.of(context).iconTheme.color!.withValues(
+                    alpha: Theme.of(context).brightness == Brightness.dark ? 0.3 : 1),
             BlendMode.srcIn),
       );
     }

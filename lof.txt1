@@ -1,0 +1,278 @@
+Launching lib/main.dart on 2312DRA50I in debug mode...
+Running Gradle task 'assembleDebug'...                           1,868ms
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...           6.1s
+I/FlutterActivityAndFragmentDelegate(12987): If you are attempting to set --enable-dart-profiling via Intent extras to launch a Flutter component outside of using the Flutter CLI, note that support for setting engine flags on Android via Intent will soon be dropped; see https://github.com/flutter/flutter/issues/180686 for more information on this breaking change. To migrate, set --enable-dart-profiling or any other flags specified via Intent extras on the command line instead or see https://github.com/flutter/flutter/blob/main/docs/engine/Flutter-Android-Engine-Flags.md for alternative methods.
+D/FlutterJNI(12987): Beginning load of flutter...
+D/FlutterJNI(12987): flutter (null) was loaded normally!
+I/flutter (12987): [IMPORTANT:flutter/shell/platform/android/android_context_vk_impeller.cc(62)] Using the Impeller rendering backend (Vulkan).
+D/FlutterRenderer(12987): Width is zero. 0,0
+Syncing files to device 2312DRA50I...                               54ms
+
+Flutter run key commands.
+r Hot reload. 🔥🔥🔥
+R Hot restart.
+h List all available interactive commands.
+d Detach (terminate "flutter run" but leave application running).
+c Clear the screen
+q Quit (terminate the application on the device).
+
+A Dart VM Service on 2312DRA50I is available at: http://127.0.0.1:61081/TLLnmCYaA7Y=/
+The Flutter DevTools debugger and profiler on 2312DRA50I is available at: http://127.0.0.1:61081/TLLnmCYaA7Y=/devtools/?uri=ws://127.0.0.1:61081/TLLnmCYaA7Y=/ws
+D/HWUI    (12987): [HWUI] Flag vulkan_enhance_pipeline_cache enabled
+D/HWUI    (12987): [HWUI] EnhanceVkPipelineCache is disabled
+D/HWUI    (12987): [HWUI] Flag ddre enabled
+I/Choreographer(12987): Skipped 184 frames!  The application may be doing too much work on its main thread.
+I/ComputilityLevel(12987): getComputilityLevel(): 3
+I/WindowExtensionsImpl(12987): Initializing Window Extensions, vendor API level=9, activity embedding enabled=true
+I/om.example.shop(12987): Compiler allocated 6432KB to compile void android.view.ViewRootImpl.performTraversals()
+D/FlutterRenderer(12987): Width is zero. 0,0
+W/libc    (12987): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+W/libc    (12987): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+D/FlutterJNI(12987): Sending viewport metrics to the engine.
+D/VRI[MainActivity](12987): vri.reportNextDraw 0 Rect(0, 0 - 1220, 2712) android.view.ViewRootImpl.performTraversals:5618 android.view.ViewRootImpl.doTraversal:4165 android.view.ViewRootImpl$TraversalRunnable.run:12567 android.view.Choreographer$CallbackRecord.run:2040 android.view.Choreographer$CallbackRecord.run:2049 
+D/SurfaceView(12987): UPDATE null, mIsCastMode = false
+D/ViewRootImplStubImpl(12987): onSurfaceViewAttached:
+D/ViewRootImplStubImpl(12987): , vri:android.view.ViewRootImpl@444d2bb, com.example.shop/com.example.shop.MainActivity
+D/ViewRootImplStubImpl(12987): , vri size:1220x2712
+D/ViewRootImplStubImpl(12987): , surfaceView:io.flutter.embedding.android.FlutterSurfaceView{c33734a V.E...... ......ID 0,0-1220,2712}, SurfaceView[com.example.shop/com.example.shop.MainActivity]
+D/ViewRootImplStubImpl(12987): , surfaceView size:1220x2712
+D/ViewRootImplStubImpl(12987): , surfaceControl:Surface(name=c33734a SurfaceView[com.example.shop/com.example.shop.MainActivity](BLAST)#91932)/@0x124e3d8
+W/libc    (12987): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+D/BLASTBufferQueue(12987): onGameOptimizeParameter: new GameOptimizeInfo game: no valid app, VsyncBuffergame: no valid app, mOptimizeEnable: 0, mSuperTouchEnable: 0,mVsyncBufferEnable: 0,mPendingBufferEnable 0,mNeedDynamicDropBuffer: 0, mNeedFirstFrameDropBuffer: 0
+D/BLASTBufferQueue(12987): 
+W/libc    (12987): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+E/qdgralloc(12987): GetSize: Unrecognized pixel format: 0x38
+E/Gralloc4(12987): isSupported(1, 1, 56, 1, ...) failed with 5
+E/GraphicBufferAllocator(12987): Failed to allocate (4 x 4) layerCount 1 format 56 usage b00: 5
+E/AHardwareBuffer(12987): GraphicBuffer(w=4, h=4, lc=1) failed (Unknown error -5), handle=0x0
+E/qdgralloc(12987): GetSize: Unrecognized pixel format: 0x3b
+E/Gralloc4(12987): isSupported(1, 1, 59, 1, ...) failed with 5
+E/GraphicBufferAllocator(12987): Failed to allocate (4 x 4) layerCount 1 format 59 usage b00: 5
+E/AHardwareBuffer(12987): GraphicBuffer(w=4, h=4, lc=1) failed (Unknown error -5), handle=0x0
+E/qdgralloc(12987): GetSize: Unrecognized pixel format: 0x38
+E/Gralloc4(12987): isSupported(1, 1, 56, 1, ...) failed with 5
+E/GraphicBufferAllocator(12987): Failed to allocate (4 x 4) layerCount 1 format 56 usage b00: 5
+E/AHardwareBuffer(12987): GraphicBuffer(w=4, h=4, lc=1) failed (Unknown error -5), handle=0x0
+E/qdgralloc(12987): GetSize: Unrecognized pixel format: 0x3b
+E/Gralloc4(12987): isSupported(1, 1, 59, 1, ...) failed with 5
+E/GraphicBufferAllocator(12987): Failed to allocate (4 x 4) layerCount 1 format 59 usage b00: 5
+E/AHardwareBuffer(12987): GraphicBuffer(w=4, h=4, lc=1) failed (Unknown error -5), handle=0x0
+W/qdgralloc(12987): getInterlacedFlag: getMetaData returned -22, defaulting to interlaced_flag = 0
+W/qdgralloc(12987): getInterlacedFlag: getMetaData returned -22, defaulting to interlaced_flag = 0
+W/qdgralloc(12987): getInterlacedFlag: getMetaData returned -22, defaulting to interlaced_flag = 0
+W/qdgralloc(12987): getInterlacedFlag: getMetaData returned -22, defaulting to interlaced_flag = 0
+W/qdgralloc(12987): getInterlacedFlag: getMetaData returned -22, defaulting to interlaced_flag = 0
+D/Activity(12987): Activity = ActivityInfo{10224e1 com.example.shop.MainActivity}, Resume onConfigurationChanged = {1.0 405mcc862mnc [en_IN] ldltr sw407dp w407dp h904dp 480dpi nrml long port night finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1220, 2712) mAppBounds=Rect(0, 0 - 1220, 2712) mMaxBounds=Rect(0, 0 - 1220, 2712) mDisplayRotation=ROTATION_0 mWindowingMode=fullscreen mActivityType=standard mAlwaysOnTop=undefined mRotation=ROTATION_0 mInSplitScreen=false letterBoxed=false foScaled=false isSpecificEmbedded=false embeddingScale=1.0} s.2 fontWeightAdjustment=0/d/0 themeChanged=0 themeChangedFlags=0 display=0 extraData = Bundle[{}] screenType=0/0}
+I/Choreographer(12987): Skipped 34 frames!  The application may be doing too much work on its main thread.
+D/FlutterJNI(12987): Sending viewport metrics to the engine.
+D/VRI[MainActivity](12987): vri.reportNextDraw 0 Rect(0, 0 - 1220, 2712) android.view.ViewRootImpl.performTraversals:5618 android.view.ViewRootImpl.doTraversal:4165 android.view.ViewRootImpl$TraversalRunnable.run:12567 android.view.Choreographer$CallbackRecord.run:2040 android.view.Choreographer$CallbackRecord.run:2049 
+D/SurfaceView(12987): UPDATE Surface(name=c33734a SurfaceView[com.example.shop/com.example.shop.MainActivity]#91931)/@0x661a16d, mIsProjectionMode = false
+D/VRI[MainActivity](12987): vri.Setup new sync=wmsSync-VRI[MainActivity]#1
+D/VRI[MainActivity](12987): vri.reportDrawFinished 0 0 Rect(0, 0 - 1220, 2712)
+I/NativeTurboSchedManager(12987): Load libmiui_runtime
+D/WindowLayoutComponentImpl(12987): Register WindowLayoutInfoListener on Context=com.example.shop.MainActivity@ac1b7ea, of which baseContext=android.app.ContextImpl@96a9125
+D/FlutterJNI(12987): Sending viewport metrics to the engine.
+D/ProfileInstaller(12987): Installing profile for com.example.shop
+W/FlutterLoader(16672): If you are trying to specify io.flutter.embedding.engine.loader.FlutterLoader.aot-shared-library-name in your application manifest, please make sure to use the new metadata key name: io.flutter.embedding.android.AOTSharedLibraryName
+E/FlutterLoader(16672): External path /libandroid_release_android_library_flutter_artifacts.so rejected; not overriding aot-shared-library-name.
+E/FlutterLoader(16672): Skipping unsafe AOT shared library name flag: libandroid_release_android_library_flutter_artifacts.so. Please ensure that the library is vetted and placed in your application's internal storage.
+W/FlutterLoader(16672): If you are trying to specify io.flutter.embedding.engine.loader.FlutterLoader.flutter-assets-dir in your application manifest, please make sure to use the new metadata key name: io.flutter.embedding.android.FlutterAssetsDir
+I/flutter (16672): [IMPORTANT:flutter/shell/common/shell.cc(528)] [Action Required]: Impeller opt-out deprecated.
+I/flutter (16672):     The application opted out of Impeller by either using the
+I/flutter (16672):     `--no-enable-impeller` flag or the
+I/flutter (16672):     `io.flutter.embedding.android.EnableImpeller` `AndroidManifest.xml` entry.
+I/flutter (16672):     These options are going to go away in an upcoming Flutter release. Remove
+I/flutter (16672):     the explicit opt-out. If you need to opt-out, please report a bug describing
+I/flutter (16672):     the issue.
+I/flutter (16672): 
+I/flutter (16672):     https://github.com/flutter/flutter/issues/new?template=02_bug.yml
+I/flutter (16672): 
+I/HandWritingStubImpl(12987): refreshLastKeyboardType: 1
+I/HandWritingStubImpl(12987): getCurrentKeyboardType: 1
+D/InsetsController(12987): hide(ime(), fromIme=false)
+I/ImeTracker(12987): com.example.shop:c1126edc: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+I/HandWritingStubImpl(12987): getCurrentKeyboardType: 1
+W/flutter-plugin-(16672): type=1400 audit(0.0:4703654): avc:  granted  { execute } for  path="/data/data/com.google.android.apps.nbu.paisa.user/app_pccache2/5/C261F5452FADA828A0BEBA37A55BDC37FE758C0A/pcam.jar" dev="dm-56" ino=1961151 scontext=u:r:untrusted_app:s0:c148,c257,c512,c768 tcontext=u:object_r:app_data_file:s0:c148,c257,c512,c768 tclass=file app=com.google.android.apps.nbu.paisa.user
+W/om.example.shop(12987): userfaultfd: MOVE ioctl seems unsupported: Connection timed out
+W/FinalizerDaemon(12987): type=1400 audit(0.0:4703656): avc:  denied  { getopt } for  path="/dev/socket/usap_pool_primary" scontext=u:r:untrusted_app:s0:c180,c257,c512,c768 tcontext=u:r:zygote:s0 tclass=unix_stream_socket permissive=0 app=com.example.shop
+E/om.example.shop(12987): FrameInsert open fail: No such file or directory
+I/om.example.shop(12987): DynamicFPS DF top: com.example.shop : 0.000000
+I/om.example.shop(12987): DF com.example.shop Support DynamicFPS.
+D/VRI[MainActivity](12987): visibilityChanged oldVisibility=true newVisibility=false
+D/ViewRootImplStubImpl(12987): onSurfaceViewDetached:
+D/ViewRootImplStubImpl(12987): , vri:android.view.ViewRootImpl@444d2bb, com.example.shop/com.example.shop.MainActivity
+D/ViewRootImplStubImpl(12987): , vri size:1220x2712
+D/ViewRootImplStubImpl(12987): , surfaceView:io.flutter.embedding.android.FlutterSurfaceView{c33734a V.E...... ........ 0,0-1220,2712}, SurfaceView[com.example.shop/com.example.shop.MainActivity]
+D/ViewRootImplStubImpl(12987): , surfaceView size:1220x2712
+D/ViewRootImplStubImpl(12987): , surfaceControl:Surface(name=c33734a SurfaceView[com.example.shop/com.example.shop.MainActivity](BLAST)#91932)/@0x124e3d8
+W/om.example.shop(12987): Binder 0xb40000708e15a320 destroyed after setInheritRt before being parceled.
+W/WindowOnBackDispatcher(12987): sendCancelIfRunning: isInProgress=false callback=android.app.Activity$$ExternalSyntheticLambda0@24d0851
+W/om.example.shop(12987): Binder 0xb40000708e136aa0 destroyed after setInheritRt before being parceled.
+W/MessageMonitor(12987): PerfMonitor: Slow Operation: Activity com.example.shop/.MainActivity onDestroy took 167ms
+D/DecorViewImmersiveImpl(12987): onDetachedFromWindow
+D/ViewRootImpl(12987): Skipping stats log for color mode
+I/ActivityThread(12987): HardwareRenderer preload  done
+D/AppScoutStateMachine(12987): 12987-ScoutStateMachinecreated
+I/om.example.shop(12987): AssetManager2(0xb40000709e13ead8) locale list changing from [] to [en-IN]
+I/AdrenoVK-0(12987): QUALCOMM build          : 35ebe05c3f, Iffba89f8fb
+I/AdrenoVK-0(12987): Build Date              : 07/25/25
+I/AdrenoVK-0(12987): Shader Compiler Version : EV031.36.08.34
+I/AdrenoVK-0(12987): Local Branch            : 
+I/AdrenoVK-0(12987): Remote Branch           : refs/tags/AU_LINUX_ANDROID_LA.VENDOR.1.0.R1.11.00.00.816.269
+I/AdrenoVK-0(12987): Remote Branch           : NONE
+I/AdrenoVK-0(12987): Reconstruct Branch      : NOTHING
+I/AdrenoVK-0(12987): Build Config            : S P 12.1.1 AArch64
+I/AdrenoVK-0(12987): Driver Path             : /vendor/lib64/hw/vulkan.adreno.so
+I/AdrenoVK-0(12987): Driver Version          : 0615.99
+I/AdrenoVK-0(12987): PFP                     : 0x01710181
+I/AdrenoVK-0(12987): ME                      : 0x00000000
+I/AdrenoVK-0(12987): Application Name    : Impeller
+I/AdrenoVK-0(12987): Application Version : 0x00400000
+I/AdrenoVK-0(12987): Engine Name         : Impeller
+I/AdrenoVK-0(12987): Engine Version      : 0x00800000
+I/AdrenoVK-0(12987): Api Version         : 0x00401000
+I/flutter (12987): [IMPORTANT:flutter/shell/platform/android/android_context_vk_impeller.cc(62)] Using the Impeller rendering backend (Vulkan).
+D/FlutterRenderer(12987): Width is zero. 0,0
+D/DecorView(12987): updateFreeformOutlineFromActivity, inFreeform=false,inFreeformWindowMode=false
+D/Activity(12987): Activity = ActivityInfo{d22fa75 com.example.shop.MainActivity}, Resume onConfigurationChanged = {1.0 405mcc862mnc [en_IN] ldltr sw407dp w407dp h904dp 480dpi nrml long port night finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1220, 2712) mAppBounds=Rect(0, 0 - 1220, 2712) mMaxBounds=Rect(0, 0 - 1220, 2712) mDisplayRotation=ROTATION_0 mWindowingMode=fullscreen mActivityType=standard mAlwaysOnTop=undefined mRotation=ROTATION_0 mInSplitScreen=false letterBoxed=false foScaled=false isSpecificEmbedded=false embeddingScale=1.0} s.2 fontWeightAdjustment=0/d/0 themeChanged=0 themeChangedFlags=0 display=0 extraData = Bundle[{}] screenType=0/0}
+D/HWUI    (12987): TAG_DDRE, CanvasContext::setDdreActivities: 
+I/ForceDarkHelperStubImpl(12987): setViewRootImplForceDark: false for com.example.shop.MainActivity@bb27a0a, reason: AppDarkModeEnable
+D/HWUI    (12987): [HWUI] Flag vulkan_enhance_pipeline_cache enabled
+D/HWUI    (12987): [HWUI] EnhanceVkPipelineCache is disabled
+D/HWUI    (12987): [HWUI] Flag ddre enabled
+I/Choreographer(12987): Skipped 218 frames!  The application may be doing too much work on its main thread.
+I/ComputilityLevel(12987): getComputilityLevel(): 3
+D/FlutterRenderer(12987): Width is zero. 0,0
+W/libc    (12987): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+D/BLASTBufferQueue(12987): onGameOptimizeParameter: new GameOptimizeInfo game: no valid app, VsyncBuffergame: no valid app, mOptimizeEnable: 0, mSuperTouchEnable: 0,mVsyncBufferEnable: 0,mPendingBufferEnable 0,mNeedDynamicDropBuffer: 0, mNeedFirstFrameDropBuffer: 0
+D/BLASTBufferQueue(12987): 
+W/libc    (12987): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+D/FlutterJNI(12987): Sending viewport metrics to the engine.
+D/VRI[MainActivity](12987): vri.reportNextDraw 0 Rect(0, 0 - 1220, 2712) android.view.ViewRootImpl.performTraversals:5618 android.view.ViewRootImpl.doTraversal:4165 android.view.ViewRootImpl$TraversalRunnable.run:12567 android.view.Choreographer$CallbackRecord.run:2040 android.view.Choreographer$CallbackRecord.run:2049 
+D/SurfaceView(12987): UPDATE null, mIsCastMode = false
+D/ViewRootImplStubImpl(12987): onSurfaceViewAttached:
+D/ViewRootImplStubImpl(12987): , vri:android.view.ViewRootImpl@8c93644, com.example.shop/com.example.shop.MainActivity
+D/ViewRootImplStubImpl(12987): , vri size:1220x2712
+D/ViewRootImplStubImpl(12987): , surfaceView:io.flutter.embedding.android.FlutterSurfaceView{7ce7b57 V.E...... ......ID 0,0-1220,2712}, SurfaceView[com.example.shop/com.example.shop.MainActivity]
+D/ViewRootImplStubImpl(12987): , surfaceView size:1220x2712
+D/ViewRootImplStubImpl(12987): , surfaceControl:Surface(name=7ce7b57 SurfaceView[com.example.shop/com.example.shop.MainActivity](BLAST)#91997)/@0x8cd032d
+W/libc    (12987): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+D/BLASTBufferQueue(12987): onGameOptimizeParameter: new GameOptimizeInfo game: no valid app, VsyncBuffergame: no valid app, mOptimizeEnable: 0, mSuperTouchEnable: 0,mVsyncBufferEnable: 0,mPendingBufferEnable 0,mNeedDynamicDropBuffer: 0, mNeedFirstFrameDropBuffer: 0
+D/BLASTBufferQueue(12987): 
+W/libc    (12987): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+E/qdgralloc(12987): GetSize: Unrecognized pixel format: 0x38
+E/Gralloc4(12987): isSupported(1, 1, 56, 1, ...) failed with 5
+E/GraphicBufferAllocator(12987): Failed to allocate (4 x 4) layerCount 1 format 56 usage b00: 5
+E/AHardwareBuffer(12987): GraphicBuffer(w=4, h=4, lc=1) failed (Unknown error -5), handle=0x0
+E/qdgralloc(12987): GetSize: Unrecognized pixel format: 0x3b
+E/Gralloc4(12987): isSupported(1, 1, 59, 1, ...) failed with 5
+E/GraphicBufferAllocator(12987): Failed to allocate (4 x 4) layerCount 1 format 59 usage b00: 5
+E/AHardwareBuffer(12987): GraphicBuffer(w=4, h=4, lc=1) failed (Unknown error -5), handle=0x0
+E/qdgralloc(12987): GetSize: Unrecognized pixel format: 0x38
+E/Gralloc4(12987): isSupported(1, 1, 56, 1, ...) failed with 5
+E/GraphicBufferAllocator(12987): Failed to allocate (4 x 4) layerCount 1 format 56 usage b00: 5
+E/AHardwareBuffer(12987): GraphicBuffer(w=4, h=4, lc=1) failed (Unknown error -5), handle=0x0
+E/qdgralloc(12987): GetSize: Unrecognized pixel format: 0x3b
+E/Gralloc4(12987): isSupported(1, 1, 59, 1, ...) failed with 5
+E/GraphicBufferAllocator(12987): Failed to allocate (4 x 4) layerCount 1 format 59 usage b00: 5
+E/AHardwareBuffer(12987): GraphicBuffer(w=4, h=4, lc=1) failed (Unknown error -5), handle=0x0
+W/qdgralloc(12987): getInterlacedFlag: getMetaData returned -22, defaulting to interlaced_flag = 0
+W/qdgralloc(12987): getInterlacedFlag: getMetaData returned -22, defaulting to interlaced_flag = 0
+W/qdgralloc(12987): getInterlacedFlag: getMetaData returned -22, defaulting to interlaced_flag = 0
+W/qdgralloc(12987): getInterlacedFlag: getMetaData returned -22, defaulting to interlaced_flag = 0
+W/qdgralloc(12987): getInterlacedFlag: getMetaData returned -22, defaulting to interlaced_flag = 0
+I/Choreographer(12987): Skipped 63 frames!  The application may be doing too much work on its main thread.
+D/FlutterJNI(12987): Sending viewport metrics to the engine.
+D/VRI[MainActivity](12987): vri.reportNextDraw 0 Rect(0, 0 - 1220, 2712) android.view.ViewRootImpl.performTraversals:5618 android.view.ViewRootImpl.doTraversal:4165 android.view.ViewRootImpl$TraversalRunnable.run:12567 android.view.Choreographer$CallbackRecord.run:2040 android.view.Choreographer$CallbackRecord.run:2049 
+D/SurfaceView(12987): UPDATE Surface(name=7ce7b57 SurfaceView[com.example.shop/com.example.shop.MainActivity]#91996)/@0xf477e4f, mIsProjectionMode = false
+D/WindowLayoutComponentImpl(12987): Register WindowLayoutInfoListener on Context=com.example.shop.MainActivity@bb27a0a, of which baseContext=android.app.ContextImpl@6286ae5
+D/FlutterJNI(12987): Sending viewport metrics to the engine.
+I/om.example.shop(12987): DynamicFPS DF top: com.example.shop : 0.000000
+D/VRI[MainActivity](12987): vri.Setup new sync=wmsSync-VRI[MainActivity]#4
+D/VRI[MainActivity](12987): vri.reportDrawFinished 0 0 Rect(0, 0 - 1220, 2712)
+I/HandWritingStubImpl(12987): refreshLastKeyboardType: 1
+I/HandWritingStubImpl(12987): getCurrentKeyboardType: 1
+D/InsetsController(12987): hide(ime(), fromIme=false)
+I/ImeTracker(12987): com.example.shop:8157fd15: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+D/VRI[MainActivity](12987): visibilityChanged oldVisibility=true newVisibility=false
+D/ViewRootImplStubImpl(12987): onSurfaceViewDetached:
+D/ViewRootImplStubImpl(12987): , vri:android.view.ViewRootImpl@8c93644, com.example.shop/com.example.shop.MainActivity
+D/ViewRootImplStubImpl(12987): , vri size:1220x2712
+D/ViewRootImplStubImpl(12987): , surfaceView:io.flutter.embedding.android.FlutterSurfaceView{7ce7b57 V.E...... ........ 0,0-1220,2712}, SurfaceView[com.example.shop/com.example.shop.MainActivity]
+D/ViewRootImplStubImpl(12987): , surfaceView size:1220x2712
+D/ViewRootImplStubImpl(12987): , surfaceControl:Surface(name=7ce7b57 SurfaceView[com.example.shop/com.example.shop.MainActivity](BLAST)#91997)/@0x8cd032d
+W/om.example.shop(12987): Binder 0xb40000708e16f140 destroyed after setInheritRt before being parceled.
+I/ForceDarkHelperStubImpl(12987): setViewRootImplForceDark: false for com.example.shop.MainActivity@bb27a0a, reason: AppDarkModeEnable
+D/ViewRootImpl(12987): Skipping stats log for color mode
+D/Activity(12987): Activity = ActivityInfo{d22fa75 com.example.shop.MainActivity}, Resume onConfigurationChanged = {1.0 405mcc862mnc [en_IN] ldltr sw407dp w407dp h904dp 480dpi nrml long port night finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1220, 2712) mAppBounds=Rect(0, 0 - 1220, 2712) mMaxBounds=Rect(0, 0 - 1220, 2712) mDisplayRotation=ROTATION_0 mWindowingMode=fullscreen mActivityType=standard mAlwaysOnTop=undefined mRotation=ROTATION_0 mInSplitScreen=false letterBoxed=false foScaled=false isSpecificEmbedded=false embeddingScale=1.0} s.2 fontWeightAdjustment=0/d/0 themeChanged=0 themeChangedFlags=0 display=0 extraData = Bundle[{}] screenType=0/0}
+D/VRI[MainActivity](12987): vri.reportNextDraw 0 Rect(0, 0 - 1220, 2712) android.view.ViewRootImpl.handleResized:3284 android.view.ViewRootImpl.-$$Nest$mhandleResized:0 android.view.ViewRootImpl$W.resized:13774 android.app.servertransaction.WindowStateResizeItem.execute:93 android.app.servertransaction.WindowStateTransactionItem.execute:62 
+W/libc    (12987): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+W/libc    (12987): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+D/BLASTBufferQueue(12987): onGameOptimizeParameter: new GameOptimizeInfo game: no valid app, VsyncBuffergame: no valid app, mOptimizeEnable: 0, mSuperTouchEnable: 0,mVsyncBufferEnable: 0,mPendingBufferEnable 0,mNeedDynamicDropBuffer: 0, mNeedFirstFrameDropBuffer: 0
+D/BLASTBufferQueue(12987): 
+D/ViewRootImplStubImpl(12987): onSurfaceViewAttached:
+D/ViewRootImplStubImpl(12987): , vri:android.view.ViewRootImpl@8c93644, com.example.shop/com.example.shop.MainActivity
+D/ViewRootImplStubImpl(12987): , vri size:1220x2712
+D/ViewRootImplStubImpl(12987): , surfaceView:io.flutter.embedding.android.FlutterSurfaceView{7ce7b57 V.E...... ......ID 0,0-1220,2712}, SurfaceView[com.example.shop/com.example.shop.MainActivity]
+D/ViewRootImplStubImpl(12987): , surfaceView size:1220x2712
+D/ViewRootImplStubImpl(12987): , surfaceControl:Surface(name=7ce7b57 SurfaceView[com.example.shop/com.example.shop.MainActivity](BLAST)#92043)/@0xdb2e7e0
+W/libc    (12987): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+W/libc    (12987): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+D/BLASTBufferQueue(12987): onGameOptimizeParameter: new GameOptimizeInfo game: no valid app, VsyncBuffergame: no valid app, mOptimizeEnable: 0, mSuperTouchEnable: 0,mVsyncBufferEnable: 0,mPendingBufferEnable 0,mNeedDynamicDropBuffer: 0, mNeedFirstFrameDropBuffer: 0
+D/BLASTBufferQueue(12987): 
+W/om.example.shop(12987): Binder 0xb40000708e1717e0 destroyed after setInheritRt before being parceled.
+E/qdgralloc(12987): GetSize: Unrecognized pixel format: 0x38
+E/Gralloc4(12987): isSupported(1, 1, 56, 1, ...) failed with 5
+E/GraphicBufferAllocator(12987): Failed to allocate (4 x 4) layerCount 1 format 56 usage b00: 5
+E/AHardwareBuffer(12987): GraphicBuffer(w=4, h=4, lc=1) failed (Unknown error -5), handle=0x0
+E/qdgralloc(12987): GetSize: Unrecognized pixel format: 0x3b
+E/Gralloc4(12987): isSupported(1, 1, 59, 1, ...) failed with 5
+E/GraphicBufferAllocator(12987): Failed to allocate (4 x 4) layerCount 1 format 59 usage b00: 5
+E/AHardwareBuffer(12987): GraphicBuffer(w=4, h=4, lc=1) failed (Unknown error -5), handle=0x0
+E/qdgralloc(12987): GetSize: Unrecognized pixel format: 0x38
+E/Gralloc4(12987): isSupported(1, 1, 56, 1, ...) failed with 5
+E/GraphicBufferAllocator(12987): Failed to allocate (4 x 4) layerCount 1 format 56 usage b00: 5
+E/AHardwareBuffer(12987): GraphicBuffer(w=4, h=4, lc=1) failed (Unknown error -5), handle=0x0
+E/qdgralloc(12987): GetSize: Unrecognized pixel format: 0x3b
+E/Gralloc4(12987): isSupported(1, 1, 59, 1, ...) failed with 5
+E/GraphicBufferAllocator(12987): Failed to allocate (4 x 4) layerCount 1 format 59 usage b00: 5
+E/AHardwareBuffer(12987): GraphicBuffer(w=4, h=4, lc=1) failed (Unknown error -5), handle=0x0
+W/qdgralloc(12987): getInterlacedFlag: getMetaData returned -22, defaulting to interlaced_flag = 0
+W/qdgralloc(12987): getInterlacedFlag: getMetaData returned -22, defaulting to interlaced_flag = 0
+W/qdgralloc(12987): getInterlacedFlag: getMetaData returned -22, defaulting to interlaced_flag = 0
+W/qdgralloc(12987): getInterlacedFlag: getMetaData returned -22, defaulting to interlaced_flag = 0
+W/qdgralloc(12987): getInterlacedFlag: getMetaData returned -22, defaulting to interlaced_flag = 0
+D/VRI[MainActivity](12987): vri.reportNextDraw 0 Rect(0, 0 - 1220, 2712) android.view.ViewRootImpl.performTraversals:5618 android.view.ViewRootImpl.doTraversal:4165 android.view.ViewRootImpl$TraversalRunnable.run:12567 android.view.Choreographer$CallbackRecord.run:2040 android.view.Choreographer$CallbackRecord.run:2049 
+D/SurfaceView(12987): UPDATE Surface(name=7ce7b57 SurfaceView[com.example.shop/com.example.shop.MainActivity]#92042)/@0xd79f15e, mIsProjectionMode = false
+D/VRI[MainActivity](12987): vri.Setup new sync=wmsSync-VRI[MainActivity]#7
+I/om.example.shop(12987): DynamicFPS DF top: com.example.shop : 0.000000
+D/VRI[MainActivity](12987): vri.reportDrawFinished 0 0 Rect(0, 0 - 1220, 2712)
+D/om.example.shop(12987): GameRender inotify watch for /data/system/mcd/rf is set up
+I/HandWritingStubImpl(12987): refreshLastKeyboardType: 1
+I/HandWritingStubImpl(12987): getCurrentKeyboardType: 1
+D/InsetsController(12987): hide(ime(), fromIme=false)
+I/ImeTracker(12987): com.example.shop:4e810d1e: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+W/FlutterLoader(17213): If you are trying to specify io.flutter.embedding.engine.loader.FlutterLoader.aot-shared-library-name in your application manifest, please make sure to use the new metadata key name: io.flutter.embedding.android.AOTSharedLibraryName
+E/FlutterLoader(17213): External path /libandroid_release_android_library_flutter_artifacts.so rejected; not overriding aot-shared-library-name.
+E/FlutterLoader(17213): Skipping unsafe AOT shared library name flag: libandroid_release_android_library_flutter_artifacts.so. Please ensure that the library is vetted and placed in your application's internal storage.
+W/FlutterLoader(17213): If you are trying to specify io.flutter.embedding.engine.loader.FlutterLoader.flutter-assets-dir in your application manifest, please make sure to use the new metadata key name: io.flutter.embedding.android.FlutterAssetsDir
+I/flutter (17213): [IMPORTANT:flutter/shell/common/shell.cc(528)] [Action Required]: Impeller opt-out deprecated.
+I/flutter (17213):     The application opted out of Impeller by either using the
+I/flutter (17213):     `--no-enable-impeller` flag or the
+I/flutter (17213):     `io.flutter.embedding.android.EnableImpeller` `AndroidManifest.xml` entry.
+I/flutter (17213):     These options are going to go away in an upcoming Flutter release. Remove
+I/flutter (17213):     the explicit opt-out. If you need to opt-out, please report a bug describing
+I/flutter (17213):     the issue.
+I/flutter (17213): 
+I/flutter (17213):     https://github.com/flutter/flutter/issues/new?template=02_bug.yml
+I/flutter (17213): 
+D/VRI[MainActivity](12987): visibilityChanged oldVisibility=true newVisibility=false
+D/ViewRootImplStubImpl(12987): onSurfaceViewDetached:
+D/ViewRootImplStubImpl(12987): , vri:android.view.ViewRootImpl@8c93644, com.example.shop/com.example.shop.MainActivity
+D/ViewRootImplStubImpl(12987): , vri size:1220x2712
+D/ViewRootImplStubImpl(12987): , surfaceView:io.flutter.embedding.android.FlutterSurfaceView{7ce7b57 V.E...... ........ 0,0-1220,2712}, SurfaceView[com.example.shop/com.example.shop.MainActivity]
+D/ViewRootImplStubImpl(12987): , surfaceView size:1220x2712
+D/ViewRootImplStubImpl(12987): , surfaceControl:Surface(name=7ce7b57 SurfaceView[com.example.shop/com.example.shop.MainActivity](BLAST)#92043)/@0xdb2e7e0
+W/om.example.shop(12987): Binder 0xb40000708e160560 destroyed after setInheritRt before being parceled.
+Lost connection to device.

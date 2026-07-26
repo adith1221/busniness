@@ -1,32 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shop/components/cart_button.dart';
-import 'package:shop/components/custom_modal_bottom_sheet.dart';
-import 'package:shop/components/network_image_with_loader.dart';
-import 'package:shop/screens/product/views/added_to_cart_message_screen.dart';
-import 'package:shop/screens/product/views/components/product_list_tile.dart';
-import 'package:shop/screens/product/views/location_permission_store_availability_screen.dart';
-import 'package:shop/screens/product/views/size_guide_screen.dart';
+import 'package:busniness/components/cart_button.dart';
+import 'package:busniness/components/custom_modal_bottom_sheet.dart';
+import 'package:busniness/components/network_image_with_loader.dart';
+import 'package:busniness/screens/product/views/added_to_cart_message_screen.dart';
+import 'package:busniness/screens/product/views/components/product_list_tile.dart';
+import 'package:busniness/screens/product/views/location_permission_store_availability_screen.dart';
+import 'package:busniness/screens/product/views/size_guide_screen.dart';
 
 import '../../../constants.dart';
+import '../../../models/product_model.dart';
 import 'components/product_quantity.dart';
 import 'components/selected_colors.dart';
 import 'components/selected_size.dart';
 import 'components/unit_price.dart';
 
 class ProductBuyNowScreen extends StatefulWidget {
-  const ProductBuyNowScreen({super.key});
+  const ProductBuyNowScreen({super.key, this.product});
+
+  final ProductModel? product;
 
   @override
-  _ProductBuyNowScreenState createState() => _ProductBuyNowScreenState();
+  State<ProductBuyNowScreen> createState() => _ProductBuyNowScreenState();
 }
 
 class _ProductBuyNowScreenState extends State<ProductBuyNowScreen> {
   @override
   Widget build(BuildContext context) {
+    final product =
+        widget.product ??
+        ProductModel(
+          image: '',
+          brandName: 'Shopify',
+          title: 'Product',
+          price: 0,
+        );
+
     return Scaffold(
       bottomNavigationBar: CartButton(
-        price: 269.4,
+        price: product.priceAfetDiscount ?? product.price,
         title: "Add to cart",
         subTitle: "Total price",
         press: () {
@@ -41,19 +53,26 @@ class _ProductBuyNowScreenState extends State<ProductBuyNowScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(
-                horizontal: defaultPadding / 2, vertical: defaultPadding),
+              horizontal: defaultPadding / 2,
+              vertical: defaultPadding,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const BackButton(),
                 Text(
-                  "Sleeveless Ruffle",
+                  product.title,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 IconButton(
                   onPressed: () {},
-                  icon: SvgPicture.asset("assets/icons/Bookmark.svg",
-                      color: Theme.of(context).textTheme.bodyLarge!.color),
+                  icon: SvgPicture.asset(
+                    "assets/icons/Bookmark.svg",
+                    colorFilter: ColorFilter.mode(
+                      Theme.of(context).textTheme.bodyLarge!.color!,
+                      BlendMode.srcIn,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -61,12 +80,14 @@ class _ProductBuyNowScreenState extends State<ProductBuyNowScreen> {
           Expanded(
             child: CustomScrollView(
               slivers: [
-                const SliverToBoxAdapter(
+                SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: defaultPadding),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: defaultPadding,
+                    ),
                     child: AspectRatio(
                       aspectRatio: 1.05,
-                      child: NetworkImageWithLoader(productDemoImg1),
+                      child: NetworkImageWithLoader(product.image),
                     ),
                   ),
                 ),
@@ -76,10 +97,11 @@ class _ProductBuyNowScreenState extends State<ProductBuyNowScreen> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: UnitPrice(
-                            price: 145,
-                            priceAfterDiscount: 134.7,
+                            price: product.price,
+                            priceAfterDiscount:
+                                product.priceAfetDiscount ?? product.price,
                           ),
                         ),
                         ProductQuantity(
@@ -128,8 +150,9 @@ class _ProductBuyNowScreenState extends State<ProductBuyNowScreen> {
                   ),
                 ),
                 SliverPadding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: defaultPadding),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: defaultPadding,
+                  ),
                   sliver: SliverToBoxAdapter(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,7 +164,8 @@ class _ProductBuyNowScreenState extends State<ProductBuyNowScreen> {
                         ),
                         const SizedBox(height: defaultPadding / 2),
                         const Text(
-                            "Select a size to check store availability and In-Store pickup options.")
+                          "Select a size to check store availability and In-Store pickup options.",
+                        ),
                       ],
                     ),
                   ),
@@ -162,10 +186,11 @@ class _ProductBuyNowScreenState extends State<ProductBuyNowScreen> {
                   ),
                 ),
                 const SliverToBoxAdapter(
-                    child: SizedBox(height: defaultPadding))
+                  child: SizedBox(height: defaultPadding),
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

@@ -4,7 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../constants.dart';
 
 class ShoppingBag extends StatelessWidget {
-  const ShoppingBag({super.key, this.color, this.numOfItem});
+  const ShoppingBag({
+    super.key,
+    this.color,
+    this.numOfItem,
+  });
 
   final Color? color;
   final int? numOfItem;
@@ -24,9 +28,7 @@ class ShoppingBag extends StatelessWidget {
             height: 24,
             width: 24,
             colorFilter: ColorFilter.mode(
-              color ?? Theme.of(context).iconTheme.color!,
-              BlendMode.srcIn,
-            ),
+                color ?? Theme.of(context).iconTheme.color!, BlendMode.srcIn),
           ),
           if (numOfItem != null)
             Padding(
@@ -42,7 +44,7 @@ class ShoppingBag extends StatelessWidget {
                       : Colors.white,
                 ),
               ),
-            ),
+            )
         ],
       ),
     );

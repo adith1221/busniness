@@ -4,9 +4,16 @@ import 'package:busniness/models/product_model.dart';
 import 'package:busniness/services/shopify_service.dart';
 
 class CollectionProductsScreen extends StatefulWidget {
-  const CollectionProductsScreen({super.key, required this.collectionHandle});
+  const CollectionProductsScreen({
+    super.key,
+    this.collectionHandle,
+    this.categoryTitle,
+    this.tag,
+  });
 
-  final String collectionHandle;
+  final String? collectionHandle;
+  final String? categoryTitle;
+  final String? tag;
 
   @override
   State<CollectionProductsScreen> createState() =>
@@ -19,16 +26,20 @@ class _CollectionProductsScreenState extends State<CollectionProductsScreen> {
   @override
   void initState() {
     super.initState();
-    _productsFuture = ShopifyService().fetchCollectionProducts(
-      widget.collectionHandle,
-    );
+    _productsFuture = widget.collectionHandle != null
+        ? ShopifyService().fetchCollectionProducts(widget.collectionHandle!)
+        : ShopifyService().fetchProductsByTag(tag: widget.tag);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.collectionHandle.replaceAll('-', ' ').toUpperCase()),
+        title: Text(
+          (widget.categoryTitle ?? widget.collectionHandle ?? 'Products')
+              .replaceAll('-', ' ')
+              .toUpperCase(),
+        ),
       ),
       body: FutureBuilder<List<ProductModel>>(
         future: _productsFuture,
@@ -67,4 +78,11 @@ class _CollectionProductsScreenState extends State<CollectionProductsScreen> {
       ),
     );
   }
+}
+
+class CategoryProductsArguments {
+  const CategoryProductsArguments({required this.title, this.tag});
+
+  final String title;
+  final String? tag;
 }

@@ -39,7 +39,7 @@ class ShopifyService {
       body: jsonEncode({
         'query': '''
           query getCollections {
-            collections(first: 10, sortKey: TITLE) {
+            collections(first: 250, sortKey: TITLE) {
               edges {
                 node {
                   id
@@ -209,6 +209,22 @@ class ShopifyService {
   }
 
   Future<List<ProductModel>> fetchProducts({int first = 8}) async {
+    return _fetchProducts(first: first);
+  }
+
+  /// Fetches products with a Shopify product tag. Pass `null` to fetch all
+  /// products. The tag value must match the tag configured in Shopify.
+  Future<List<ProductModel>> fetchProductsByTag({
+    String? tag,
+    int first = 50,
+  }) async {
+    return _fetchProducts(first: first, tag: tag);
+  }
+
+  Future<List<ProductModel>> _fetchProducts({
+    required int first,
+    String? tag,
+  }) async {
     const storeDomain = 'mimsico.myshopify.com';
     const accessToken = '92c151ad07a7a610b0aeb4003d375f59';
 
@@ -228,8 +244,9 @@ class ShopifyService {
         'query': '''
           query getProducts(
             \$first: Int!
+            \$query: String
           ) {
-            products(first: \$first, sortKey: TITLE) {
+            products(first: \$first, sortKey: TITLE, query: \$query) {
               edges {
                 node {
                   id
@@ -267,7 +284,12 @@ class ShopifyService {
             }
           }
         ''',
-        'variables': {'first': first},
+        'variables': {
+          'first': first,
+          'query': tag == null || tag.trim().isEmpty
+              ? null
+              : 'tag:${_shopifySearchValue(tag)}',
+        },
       }),
     );
 
@@ -328,6 +350,11 @@ class ShopifyService {
       debugPrintStack(stackTrace: stackTrace);
       return [];
     }
+  }
+
+  String _shopifySearchValue(String value) {
+    final trimmed = value.trim();
+    return trimmed.contains(' ') ? '"$trimmed"' : trimmed;
   }
 
   double _readMoney(dynamic value) {

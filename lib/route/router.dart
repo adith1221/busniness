@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:busniness/entry_point.dart';
-import 'package:busniness/models/product_model.dart';
 
 import 'screen_export.dart';
-
+import 'package:busniness/models/product_model.dart';
 // Yuo will get 50+ screens and more once you have the full template
 // 🔗 Full template: https://theflutterway.gumroad.com/l/fluttershop
 
@@ -66,15 +65,21 @@ import 'screen_export.dart';
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case onbordingScreenRoute:
-      return MaterialPageRoute(builder: (context) => const OnBordingScreen());
+      return MaterialPageRoute(
+        builder: (context) => const OnBordingScreen(),
+      );
     // case preferredLanuageScreenRoute:
     //   return MaterialPageRoute(
     //     builder: (context) => const PreferredLanguageScreen(),
     //   );
     case logInScreenRoute:
-      return MaterialPageRoute(builder: (context) => const LoginScreen());
+      return MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
+      );
     case signUpScreenRoute:
-      return MaterialPageRoute(builder: (context) => const SignUpScreen());
+      return MaterialPageRoute(
+        builder: (context) => const SignUpScreen(),
+      );
     // case profileSetupScreenRoute:
     //   return MaterialPageRoute(
     //     builder: (context) => const ProfileSetupScreen(),
@@ -126,20 +131,33 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case productDetailsScreenRoute:
       return MaterialPageRoute(
         builder: (context) {
-          final arguments = settings.arguments;
-          if (arguments is ProductModel) {
-            return ProductDetailsScreen(product: arguments);
-          }
+          final product = settings.arguments as ProductModel?;
 
-          bool isProductAvailable = arguments as bool? ?? true;
-          return ProductDetailsScreen(isProductAvailable: isProductAvailable);
+          return ProductDetailsScreen(
+            product: product,
+            isProductAvailable: true,
+          );
         },
       );
     case collectionProductsScreenRoute:
       return MaterialPageRoute(
-        builder: (context) => CollectionProductsScreen(
-          collectionHandle: settings.arguments as String? ?? '',
-        ),
+        builder: (context) {
+          final arguments = settings.arguments;
+          if (arguments is CategoryProductsArguments) {
+            return CollectionProductsScreen(
+              categoryTitle: arguments.title,
+              tag: arguments.tag,
+            );
+          }
+
+          return CollectionProductsScreen(
+            collectionHandle: arguments as String? ?? '',
+          );
+        },
+      );
+    case collectionsScreenRoute:
+      return MaterialPageRoute(
+        builder: (context) => const CollectionsScreen(),
       );
     case productReviewsScreenRoute:
       return MaterialPageRoute(
@@ -150,7 +168,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     //     builder: (context) => const AddReviewScreen(),
     //   );
     case homeScreenRoute:
-      return MaterialPageRoute(builder: (context) => const HomeScreen());
+      return MaterialPageRoute(
+        builder: (context) => const HomeScreen(),
+      );
     // case brandScreenRoute:
     //   return MaterialPageRoute(
     //     builder: (context) => const BrandScreen(),
@@ -164,23 +184,37 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     //     builder: (context) => const SubDiscoverScreen(),
     //   );
     case discoverScreenRoute:
-      return MaterialPageRoute(builder: (context) => const DiscoverScreen());
+      return MaterialPageRoute(
+        builder: (context) => const DiscoverScreen(),
+      );
     case onSaleScreenRoute:
-      return MaterialPageRoute(builder: (context) => const OnSaleScreen());
+      return MaterialPageRoute(
+        builder: (context) => const OnSaleScreen(),
+      );
     case kidsScreenRoute:
-      return MaterialPageRoute(builder: (context) => const KidsScreen());
+      return MaterialPageRoute(
+        builder: (context) => const KidsScreen(),
+      );
     case searchScreenRoute:
-      return MaterialPageRoute(builder: (context) => const SearchScreen());
+      return MaterialPageRoute(
+        builder: (context) => const SearchScreen(),
+      );
     // case searchHistoryScreenRoute:
     //   return MaterialPageRoute(
     //     builder: (context) => const SearchHistoryScreen(),
     //   );
     case bookmarkScreenRoute:
-      return MaterialPageRoute(builder: (context) => const BookmarkScreen());
+      return MaterialPageRoute(
+        builder: (context) => const BookmarkScreen(),
+      );
     case entryPointScreenRoute:
-      return MaterialPageRoute(builder: (context) => const EntryPoint());
+      return MaterialPageRoute(
+        builder: (context) => const EntryPoint(),
+      );
     case profileScreenRoute:
-      return MaterialPageRoute(builder: (context) => const ProfileScreen());
+      return MaterialPageRoute(
+        builder: (context) => const ProfileScreen(),
+      );
     // case getHelpScreenRoute:
     //   return MaterialPageRoute(
     //     builder: (context) => const GetHelpScreen(),
@@ -190,7 +224,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     //     builder: (context) => const ChatScreen(),
     //   );
     case userInfoScreenRoute:
-      return MaterialPageRoute(builder: (context) => const UserInfoScreen());
+      return MaterialPageRoute(
+        builder: (context) => const UserInfoScreen(),
+      );
     // case currentPasswordScreenRoute:
     //   return MaterialPageRoute(
     //     builder: (context) => const CurrentPasswordScreen(),
@@ -224,13 +260,17 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     //     builder: (context) => const NoAddressScreen(),
     //   );
     case addressesScreenRoute:
-      return MaterialPageRoute(builder: (context) => const AddressesScreen());
+      return MaterialPageRoute(
+        builder: (context) => const AddressesScreen(),
+      );
     // case addNewAddressesScreenRoute:
     //   return MaterialPageRoute(
     //     builder: (context) => const AddNewAddressScreen(),
     //   );
     case ordersScreenRoute:
-      return MaterialPageRoute(builder: (context) => const OrdersScreen());
+      return MaterialPageRoute(
+        builder: (context) => const OrdersScreen(),
+      );
     // case orderProcessingScreenRoute:
     //   return MaterialPageRoute(
     //     builder: (context) => const OrderProcessingScreen(),
@@ -252,17 +292,25 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     //     builder: (context) => const CancledOrdersScreen(),
     //   );
     case preferencesScreenRoute:
-      return MaterialPageRoute(builder: (context) => const PreferencesScreen());
+      return MaterialPageRoute(
+        builder: (context) => const PreferencesScreen(),
+      );
     // case emptyPaymentScreenRoute:
     //   return MaterialPageRoute(
     //     builder: (context) => const EmptyPaymentScreen(),
     //   );
     case emptyWalletScreenRoute:
-      return MaterialPageRoute(builder: (context) => const EmptyWalletScreen());
+      return MaterialPageRoute(
+        builder: (context) => const EmptyWalletScreen(),
+      );
     case walletScreenRoute:
-      return MaterialPageRoute(builder: (context) => const WalletScreen());
+      return MaterialPageRoute(
+        builder: (context) => const WalletScreen(),
+      );
     case cartScreenRoute:
-      return MaterialPageRoute(builder: (context) => const CartScreen());
+      return MaterialPageRoute(
+        builder: (context) => const CartScreen(),
+      );
     // case paymentMethodScreenRoute:
     //   return MaterialPageRoute(
     //     builder: (context) => const PaymentMethodScreen(),

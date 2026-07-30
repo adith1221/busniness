@@ -19,7 +19,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
   @override
   void initState() {
     super.initState();
-    _productsFuture = ShopifyService().fetchProducts(first: 8);
+    _productsFuture = ShopifyService().fetchProducts(first: 10);
   }
 
   @override

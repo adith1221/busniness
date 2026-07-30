@@ -16,7 +16,7 @@ void main() {
       expect(product.brandName, 'My Store');
       expect(product.image, 'https://cdn.example.com/product.jpg');
       expect(product.price, 49.99);
-      expect(product.priceAfetDiscount, 49.99);
+      expect(product.priceAfetDiscount, isNull);
     });
   });
 }

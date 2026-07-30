@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:busniness/route/route_constants.dart';
-import 'package:busniness/services/shopify_service.dart';
-
 import '../../../../constants.dart';
+import '../../../collection/views/collection_products_screen.dart';
 
 class Categories extends StatefulWidget {
   const Categories({super.key});
@@ -13,72 +11,77 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> {
-  late Future<List<ShopifyCollection>> _collectionsFuture;
+  static const _categories = <_HomeCategory>[
+    _HomeCategory(label: 'All', icon: Icons.storefront_rounded),
+    _HomeCategory(
+        label: 'Girl Fashion', tag: 'Girls', icon: Icons.girl_rounded),
+    _HomeCategory(label: 'Boy Fashion', tag: 'Boys', icon: Icons.boy_rounded),
+    _HomeCategory(label: 'Toys & Craft', tag: 'Toys', icon: Icons.toys_rounded),
+    _HomeCategory(
+        label: 'Daily Care',
+        tag: 'Baby Care',
+        icon: Icons.baby_changing_station_rounded),
+  ];
 
-  @override
-  void initState() {
-    super.initState();
-    _collectionsFuture = ShopifyService().fetchCollections();
-  }
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<ShopifyCollection>>(
-      future: _collectionsFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SizedBox(height: 36);
-        }
-
-        final collections = snapshot.data ?? <ShopifyCollection>[];
-        if (collections.isEmpty) {
-          return const SizedBox.shrink();
-        }
-
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              ...List.generate(
-                collections.length,
-                (index) => Padding(
-                  padding: EdgeInsets.only(
-                    left: index == 0 ? defaultPadding : defaultPadding / 2,
-                    right: index == collections.length - 1 ? defaultPadding : 0,
-                  ),
-                  child: CategoryBtn(
-                    category: collections[index].title,
-                    svgSrc: null,
-                    isActive: index == 0,
-                    press: () {
-                      Navigator.pushNamed(
-                        context,
-                        collectionProductsScreenRoute,
-                        arguments: collections[index].handle,
-                      );
-                    },
-                  ),
-                ),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(
+          _categories.length,
+          (index) {
+            final category = _categories[index];
+            return Padding(
+              padding: EdgeInsets.only(
+                left: index == 0 ? defaultPadding : 6,
+                right: index == _categories.length - 1 ? defaultPadding : 0,
               ),
-            ],
-          ),
-        );
-      },
+              child: CategoryBtn(
+                category: category.label,
+                icon: category.icon,
+                isActive: _selectedIndex == index,
+                press: () {
+                  setState(() => _selectedIndex = index);
+                  Navigator.pushNamed(
+                    context,
+                    collectionProductsScreenRoute,
+                    arguments: CategoryProductsArguments(
+                      title: category.label,
+                      tag: category.tag,
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
+}
+
+class _HomeCategory {
+  const _HomeCategory({required this.label, required this.icon, this.tag});
+
+  final String label;
+  final IconData icon;
+  final String? tag;
 }
 
 class CategoryBtn extends StatelessWidget {
   const CategoryBtn({
     super.key,
     required this.category,
-    this.svgSrc,
+    this.icon,
     required this.isActive,
     required this.press,
   });
 
   final String category;
-  final String? svgSrc;
+  final IconData? icon;
   final bool isActive;
   final VoidCallback press;
 
@@ -86,39 +89,43 @@ class CategoryBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: press,
-      borderRadius: const BorderRadius.all(Radius.circular(30)),
+      borderRadius: const BorderRadius.all(Radius.circular(12)),
       child: Container(
-        height: 36,
-        padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+        width: 86,
+        height: 82,
+        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 4),
         decoration: BoxDecoration(
-          color: isActive ? primaryColor : Colors.transparent,
-          border: Border.all(
-            color: isActive
-                ? Colors.transparent
-                : Theme.of(context).dividerColor,
+          border: Border(
+            bottom: BorderSide(
+              color: isActive ? const Color(0xFFE85D92) : Colors.transparent,
+              width: 3,
+            ),
           ),
-          borderRadius: const BorderRadius.all(Radius.circular(30)),
         ),
-        child: Row(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (svgSrc != null)
-              SvgPicture.asset(
-                svgSrc!,
-                height: 20,
-                colorFilter: ColorFilter.mode(
-                  isActive ? Colors.white : Theme.of(context).iconTheme.color!,
-                  BlendMode.srcIn,
-                ),
+            if (icon != null)
+              Icon(
+                icon,
+                size: 29,
+                color: isActive
+                    ? const Color(0xFFE85D92)
+                    : const Color(0xFF383238),
               ),
-            if (svgSrc != null) const SizedBox(width: defaultPadding / 2),
+            if (icon != null) const SizedBox(height: 5),
             Text(
               category,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
+                fontSize: 11,
+                height: 1,
+                fontWeight: isActive ? FontWeight.w800 : FontWeight.w600,
                 color: isActive
-                    ? Colors.white
-                    : Theme.of(context).textTheme.bodyLarge!.color,
+                    ? const Color(0xFFE85D92)
+                    : const Color(0xFF383238),
               ),
             ),
           ],

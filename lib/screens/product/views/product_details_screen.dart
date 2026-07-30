@@ -17,7 +17,7 @@ import 'components/product_list_tile.dart';
 import '../../../components/review_card.dart';
 import 'product_buy_now_screen.dart';
 
-class ProductDetailsScreen extends StatelessWidget {
+class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({
     super.key,
     this.product,
@@ -28,8 +28,32 @@ class ProductDetailsScreen extends StatelessWidget {
   final bool isProductAvailable;
 
   @override
+  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
+}
+
+class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  final ShopifyService _shopifyService = ShopifyService();
+  late Future<List<ProductModel>> _relatedProductsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _relatedProductsFuture = _shopifyService.fetchProducts(first: 12);
+  }
+
+  @override
+  void didUpdateWidget(covariant ProductDetailsScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.product?.shopifyId != oldWidget.product?.shopifyId) {
+      // If the product changes, you might want to refetch related products
+      // or just ensure the UI rebuilds with the new product data.
+      // For now, we are just rebuilding.
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final selectedProduct = product ??
+    final selectedProduct = widget.product ??
         ProductModel(
           image: '',
           brandName: 'Shopify',
@@ -44,11 +68,8 @@ class ProductDetailsScreen extends StatelessWidget {
             ? [selectedProduct.image]
             : [productDemoImg1]);
 
-    final shopifyService = ShopifyService();
-    final relatedProductsFuture = shopifyService.fetchProducts(first: 12);
-
     return Scaffold(
-      bottomNavigationBar: isProductAvailable
+      bottomNavigationBar: widget.isProductAvailable
           ? CartButton(
               price: selectedProduct.priceAfetDiscount ?? selectedProduct.price,
               press: () {
@@ -86,7 +107,7 @@ class ProductDetailsScreen extends StatelessWidget {
             ProductInfo(
               brand: selectedProduct.brandName.toUpperCase(),
               title: selectedProduct.title,
-              isAvailable: isProductAvailable,
+              isAvailable: widget.isProductAvailable,
               description: selectedProduct.description ??
                   "A cool gray cap in soft corduroy. Watch me.' By buying cotton products from Lindex, you’re supporting more responsibly...",
               rating: 4.4,
@@ -163,7 +184,7 @@ class ProductDetailsScreen extends StatelessWidget {
             ),
             SliverToBoxAdapter(
               child: FutureBuilder<List<ProductModel>>(
-                future: relatedProductsFuture,
+                future: _relatedProductsFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const SizedBox(
@@ -213,10 +234,12 @@ class ProductDetailsScreen extends StatelessWidget {
                               relatedProducts[index].priceAfetDiscount,
                           dicountpercent: relatedProducts[index].dicountpercent,
                           press: () {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ProductDetailsScreen(
+                                  key: ValueKey(
+                                      relatedProducts[index].shopifyId),
                                   product: relatedProducts[index],
                                 ),
                               ),

@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:busniness/components/list_tile/divider_list_tile.dart';
 import 'package:busniness/components/network_image_with_loader.dart';
 import 'package:busniness/constants.dart';
+import 'package:busniness/entry_point.dart';
 import 'package:busniness/route/screen_export.dart';
 
 import 'components/profile_card.dart';
@@ -26,18 +27,18 @@ class ProfileScreen extends StatelessWidget {
               Navigator.pushNamed(context, userInfoScreenRoute);
             },
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: defaultPadding, vertical: defaultPadding * 1.5),
-            child: GestureDetector(
-              onTap: () {},
-              child: const AspectRatio(
-                aspectRatio: 1.8,
-                child:
-                    NetworkImageWithLoader("https://i.imgur.com/dz0BBom.png"),
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(
+          //       horizontal: defaultPadding, vertical: defaultPadding * 1.5),
+          //   child: GestureDetector(
+          //     onTap: () {},
+          //     child: const AspectRatio(
+          //       aspectRatio: 1.8,
+          //       child:
+          //           NetworkImageWithLoader("https://i.imgur.com/dz0BBom.png"),
+          //     ),
+          //   ),
+          // ),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
@@ -57,12 +58,20 @@ class ProfileScreen extends StatelessWidget {
           ProfileMenuListTile(
             text: "Returns",
             svgSrc: "assets/icons/Return.svg",
-            press: () {},
+            press: () {
+              Navigator.pushNamed(context, returnsScreenRoute);
+            },
           ),
           ProfileMenuListTile(
             text: "Wishlist",
             svgSrc: "assets/icons/Wishlist.svg",
-            press: () {},
+            press: () {
+              Navigator.pushNamed(
+                context,
+                entryPointWithTabScreenRoute,
+                arguments: 2,
+              );
+            },
           ),
           ProfileMenuListTile(
             text: "Addresses",

@@ -207,9 +207,27 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => const BookmarkScreen(),
       );
+    case returnsScreenRoute:
+      return MaterialPageRoute(
+        builder: (context) => const ReturnsScreen(),
+      );
+    case returnOrderDetailsScreenRoute:
+      return MaterialPageRoute(
+        builder: (context) {
+          final order = settings.arguments as Map<String, dynamic>?;
+          return ReturnOrderDetailsScreen(order: order ?? {});
+        },
+      );
     case entryPointScreenRoute:
       return MaterialPageRoute(
         builder: (context) => const EntryPoint(),
+      );
+    case entryPointWithTabScreenRoute:
+      return MaterialPageRoute(
+        builder: (context) {
+          final tabIndex = settings.arguments as int? ?? 0;
+          return EntryPoint(initialIndex: tabIndex);
+        },
       );
     case profileScreenRoute:
       return MaterialPageRoute(
@@ -311,10 +329,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => const CartScreen(),
       );
-    // case paymentMethodScreenRoute:
-    //   return MaterialPageRoute(
-    //     builder: (context) => const PaymentMethodScreen(),
-    //   );
+    case paymentMethodScreenRoute:
+      return MaterialPageRoute(
+        builder: (context) => const PaymentScreen(),
+      );
     // case addNewCardScreenRoute:
     //   return MaterialPageRoute(
     //     builder: (context) => const AddNewCardScreen(),

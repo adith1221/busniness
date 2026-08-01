@@ -21,11 +21,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final Future<List<ShopifyCollection>> _collectionsFuture;
+  late List<_DeliveryAddress> _addresses;
+  late int _selectedAddressIndex;
 
   @override
   void initState() {
     super.initState();
     _collectionsFuture = ShopifyService().fetchCollections();
+    _addresses = _buildDummyAddresses();
+    _selectedAddressIndex = 0;
   }
 
   @override
@@ -38,6 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
             SliverToBoxAdapter(
               child: _BabyHomeHeader(
                 onSearch: () => Navigator.pushNamed(context, searchScreenRoute),
+                selectedAddress: _selectedAddressLabel,
+                onLocationTap: _showDeliveryAddressSheet,
               ),
             ),
             const SliverToBoxAdapter(child: Categories()),
@@ -82,14 +88,79 @@ class _HomeScreenState extends State<HomeScreen> {
       arguments: CategoryProductsArguments(title: title, tag: tag),
     );
   }
+
+  Future<void> _showDeliveryAddressSheet() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) {
+        return _DeliveryAddressBottomSheet(
+          addresses: _addresses,
+          selectedIndex: _selectedAddressIndex,
+          onSelect: (index) {
+            setState(() => _selectedAddressIndex = index);
+            Navigator.of(sheetContext).pop();
+          },
+          onAddNew: () async {
+            Navigator.of(sheetContext).pop();
+            await Navigator.pushNamed(context, addressesScreenRoute);
+            if (mounted) {
+              setState(() => _addresses = _buildDummyAddresses());
+            }
+          },
+        );
+      },
+    );
+  }
+
+  String get _selectedAddressLabel {
+    if (_addresses.isEmpty) {
+      return 'your selected location';
+    }
+
+    final selectedAddress = _addresses[_selectedAddressIndex];
+    return selectedAddress.label;
+  }
+
+  List<_DeliveryAddress> _buildDummyAddresses() {
+    return [
+      _DeliveryAddress(
+        label: 'Home',
+        recipientName: 'Sepide Rahimi',
+        phoneNumber: '+1 555 123 4567',
+        fullAddress: '123 Market Street, New York, NY 10001',
+        icon: Icons.home_rounded,
+        isDefault: true,
+      ),
+      _DeliveryAddress(
+        label: 'Work',
+        recipientName: 'Sepide Rahimi',
+        phoneNumber: '+1 555 987 6543',
+        fullAddress: '88 Ocean Avenue, Los Angeles, CA 90001',
+        icon: Icons.work_rounded,
+      ),
+      _DeliveryAddress(
+        label: 'Other',
+        recipientName: 'Sepide Rahimi',
+        phoneNumber: '+1 555 222 3333',
+        fullAddress: '12 Willow Road, Chicago, IL 60601',
+        icon: Icons.location_on_rounded,
+      ),
+    ];
+  }
 }
 
 class _BabyHomeHeader extends StatelessWidget {
-  const _BabyHomeHeader({
+  _BabyHomeHeader({
     required this.onSearch,
+    required this.selectedAddress,
+    required this.onLocationTap,
   });
 
   final VoidCallback onSearch;
+  final String selectedAddress;
+  final VoidCallback onLocationTap;
 
   @override
   Widget build(BuildContext context) {
@@ -103,30 +174,36 @@ class _BabyHomeHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Mimsico',
                       style:
                           TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
                     ),
-                    SizedBox(height: 3),
-                    Row(
-                      children: [
-                        Icon(Icons.location_on_rounded, size: 17),
-                        SizedBox(width: 3),
-                        Expanded(
-                          child: Text(
-                            'Delivering to your selected location',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontWeight: FontWeight.w600),
+                    const SizedBox(height: 3),
+                    InkWell(
+                      onTap: onLocationTap,
+                      borderRadius: BorderRadius.circular(14),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.location_on_rounded, size: 17),
+                          const SizedBox(width: 3),
+                          Expanded(
+                            child: Text(
+                              'Delivering to $selectedAddress',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600),
+                            ),
                           ),
-                        ),
-                        Icon(Icons.keyboard_arrow_down_rounded, size: 19),
-                      ],
+                          const Icon(Icons.keyboard_arrow_down_rounded,
+                              size: 19),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -175,6 +252,231 @@ class _BabyHomeHeader extends StatelessWidget {
       ),
     );
   }
+}
+
+class _DeliveryAddressBottomSheet extends StatelessWidget {
+  const _DeliveryAddressBottomSheet({
+    required this.addresses,
+    required this.selectedIndex,
+    required this.onSelect,
+    required this.onAddNew,
+  });
+
+  final List<_DeliveryAddress> addresses;
+  final int selectedIndex;
+  final ValueChanged<int> onSelect;
+  final VoidCallback onAddNew;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      child: SafeArea(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.82,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              defaultPadding,
+              defaultPadding,
+              defaultPadding,
+              defaultPadding,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Select Delivery Address',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.close_rounded),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: defaultPadding),
+                Flexible(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: addresses.length,
+                    separatorBuilder: (_, __) =>
+                        const SizedBox(height: defaultPadding),
+                    itemBuilder: (context, index) {
+                      final address = addresses[index];
+                      return _AddressCard(
+                        address: address,
+                        isSelected: index == selectedIndex,
+                        onTap: () => onSelect(index),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: defaultPadding),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: onAddNew,
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      backgroundColor: primaryColor,
+                      foregroundColor: whiteColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(defaultBorderRadious),
+                      ),
+                    ),
+                    icon: const Icon(Icons.add_rounded),
+                    label: const Text('+ Add New Address'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AddressCard extends StatelessWidget {
+  const _AddressCard({
+    required this.address,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final _DeliveryAddress address;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final borderColor =
+        isSelected ? primaryColor : Theme.of(context).dividerColor;
+    final iconColor = isSelected ? primaryColor : const Color(0xFF6E6870);
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(defaultBorderRadious),
+      child: Container(
+        padding: const EdgeInsets.all(defaultPadding),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? const Color(0xFFF6F3FF)
+              : Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(defaultBorderRadious),
+          border: Border.all(color: borderColor),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF0F7),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(address.icon, color: iconColor, size: 24),
+            ),
+            const SizedBox(width: defaultPadding),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          address.label,
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                      ),
+                      if (address.isDefault)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE8F8EE),
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: const Text(
+                            'Default',
+                            style: TextStyle(
+                              color: successColor,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    address.recipientName,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    address.phoneNumber,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    address.fullAddress,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: defaultPadding / 2),
+            Radio<int>(
+              value: 1,
+              groupValue: isSelected ? 1 : 0,
+              onChanged: (_) => onTap(),
+              activeColor: primaryColor,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DeliveryAddress {
+  const _DeliveryAddress({
+    required this.label,
+    required this.recipientName,
+    required this.phoneNumber,
+    required this.fullAddress,
+    required this.icon,
+    this.isDefault = false,
+  });
+
+  final String label;
+  final String recipientName;
+  final String phoneNumber;
+  final String fullAddress;
+  final IconData icon;
+  final bool isDefault;
 }
 
 class _RestockBanner extends StatelessWidget {

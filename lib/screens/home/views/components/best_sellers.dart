@@ -19,7 +19,7 @@ class _BestSellersState extends State<BestSellers> {
   @override
   void initState() {
     super.initState();
-    _productsFuture = ShopifyService().fetchProducts(first: 4);
+    _productsFuture = ShopifyService().fetchProducts(first: 5);
   }
 
   @override

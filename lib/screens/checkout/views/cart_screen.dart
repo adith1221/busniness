@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:busniness/components/network_image_with_loader.dart';
 import 'package:busniness/constants.dart';
 import 'package:busniness/models/product_model.dart';
+import 'package:busniness/route/route_constants.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -105,7 +106,10 @@ class CartScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => Navigator.pushNamed(
+                        context,
+                        paymentMethodScreenRoute,
+                      ),
                       child: const Text('Checkout'),
                     ),
                   ),

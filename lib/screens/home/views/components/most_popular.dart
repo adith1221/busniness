@@ -19,7 +19,7 @@ class _MostPopularState extends State<MostPopular> {
   @override
   void initState() {
     super.initState();
-    _productsFuture = ShopifyService().fetchProducts(first: 5);
+    _productsFuture = ShopifyService().fetchProducts(first: 4);
   }
 
   @override
@@ -78,6 +78,10 @@ class _MostPopularState extends State<MostPopular> {
                     priceAfetDiscount: products[index].priceAfetDiscount,
                     dicountpercent: products[index].dicountpercent,
                     press: () {
+                      debugPrint("Pressed: ${products[index].title}");
+                      debugPrint("Shopify ID: ${products[index].shopifyId}");
+                      debugPrint("Image: ${products[index].image}");
+
                       Navigator.pushNamed(
                         context,
                         productDetailsScreenRoute,

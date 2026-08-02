@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:busniness/components/list_tile/divider_list_tile.dart';
-import 'package:busniness/components/network_image_with_loader.dart';
 import 'package:busniness/constants.dart';
-import 'package:busniness/entry_point.dart';
 import 'package:busniness/route/screen_export.dart';
 
 import 'components/profile_card.dart';

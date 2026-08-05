@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
-Future<dynamic> customModalBottomSheet(
+Future<T?> customModalBottomSheet<T>(
   BuildContext context, {
   bool isDismissible = true,
   double? height,

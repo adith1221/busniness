@@ -6,6 +6,8 @@ import 'package:busniness/models/product_model.dart';
 // Yuo will get 50+ screens and more once you have the full template
 // 🔗 Full template: https://theflutterway.gumroad.com/l/fluttershop
 
+import 'package:busniness/screens/auth/views/decision_screen.dart';
+import 'package:busniness/screens/auth/views/otp_screen.dart';
 // NotificationPermissionScreen()
 // PreferredLanguageScreen()
 // SelectLanguageScreen()
@@ -92,10 +94,24 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     //   return MaterialPageRoute(
     //     builder: (context) => const VerificationMethodScreen(),
     //   );
-    // case otpScreenRoute:
-    //   return MaterialPageRoute(
-    //     builder: (context) => const OtpScreen(),
-    //   );
+    case otpScreenRoute:
+      final args = settings.arguments;
+      if (args is Map) {
+        // For Login flow
+        return MaterialPageRoute(
+          builder: (context) => OtpScreen(
+            phoneNumber: args['phoneNumber'],
+            isLoginFlow: args['isLoginFlow'] ?? false,
+          ),
+        );
+      }
+      // For SignUp flow
+      return MaterialPageRoute(
+        builder: (context) => OtpScreen(
+          phoneNumber: args as String,
+          isLoginFlow: false,
+        ),
+      );
     // case newPasswordScreenRoute:
     //   return MaterialPageRoute(
     //     builder: (context) => const SetNewPasswordScreen(),
@@ -129,6 +145,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     //     builder: (context) => const SetupFaceIdScreen(),
     //   );
     case productDetailsScreenRoute:
+      // This is the wrong way to do this
+      // you should use a state management solution
+      // to access the product from anywhere in the app
+      // but for the sake of simplicity we will do it this way
       return MaterialPageRoute(
         builder: (context) {
           final product = settings.arguments as ProductModel?;
@@ -344,7 +364,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     default:
       return MaterialPageRoute(
         // Make a screen for undefine
-        builder: (context) => const OnBordingScreen(),
+        builder: (context) => const DecisionScreen(),
       );
   }
 }

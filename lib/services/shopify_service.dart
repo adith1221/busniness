@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:busniness/models/product_model.dart';
+import 'package:busniness/services/picks_service.dart';
 
 class ShopifyCollection {
   ShopifyCollection({
@@ -20,6 +22,7 @@ class ShopifyService {
   ShopifyService({http.Client? client}) : _client = client ?? http.Client();
 
   final http.Client _client;
+  final PicksService _picksService = PicksService();
 
   Future<List<ShopifyCollection>> fetchCollections() async {
     const storeDomain = 'mimsico.myshopify.com';
@@ -29,39 +32,39 @@ class ShopifyService {
       return [];
     }
 
-    final uri = Uri.https(storeDomain, '/api/2024-04/graphql.json');
-    final response = await _client.post(
-      uri,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': accessToken,
-      },
-      body: jsonEncode({
-        'query': '''
-          query getCollections {
-            collections(first: 250, sortKey: TITLE) {
-              edges {
-                node {
-                  id
-                  title
-                  handle
-                  image {
-                    url
-                    altText
+    try {
+      final uri = Uri.https(storeDomain, '/api/2024-04/graphql.json');
+      final response = await _postGraphql(
+        uri: uri,
+        accessToken: accessToken,
+        body: jsonEncode({
+          'query': '''
+            query getCollections {
+              collections(first: 250, sortKey: TITLE) {
+                edges {
+                  node {
+                    id
+                    title
+                    handle
+                    image {
+                      url
+                      altText
+                    }
                   }
                 }
               }
             }
-          }
-        ''',
-      }),
-    );
+          ''',
+        }),
+      );
 
-    if (response.statusCode != 200) {
-      return [];
-    }
+      if (response.statusCode != 200) {
+        debugPrint(
+          'Shopify collections request failed: ${response.statusCode} ${response.body}',
+        );
+        return [];
+      }
 
-    try {
       final body = jsonDecode(response.body) as Map<String, dynamic>;
       final edges =
           body['data']?['collections']?['edges'] as List<dynamic>? ?? const [];
@@ -81,7 +84,7 @@ class ShopifyService {
           .where((item) => item.handle.isNotEmpty)
           .toList();
     } catch (error, stackTrace) {
-      debugPrint('Shopify collections parsing error: $error');
+      debugPrint('Shopify collections request error: $error');
       debugPrintStack(stackTrace: stackTrace);
       return [];
     }
@@ -95,20 +98,157 @@ class ShopifyService {
       return [];
     }
 
-    final uri = Uri.https(storeDomain, '/api/2024-04/graphql.json');
-    final response = await _client.post(
-      uri,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': accessToken,
-      },
-      body: jsonEncode({
-        'query': '''
-          query getCollectionProducts(
-            \$handle: String!
-          ) {
-            collection(handle: \$handle) {
-              products(first: 20) {
+    try {
+      final uri = Uri.https(storeDomain, '/api/2024-04/graphql.json');
+      final response = await _postGraphql(
+        uri: uri,
+        accessToken: accessToken,
+        body: jsonEncode({
+          'query': '''
+            query getCollectionProducts(
+              \$handle: String!
+            ) {
+              collection(handle: \$handle) {
+                products(first: 20) {
+                  edges {
+                    node {
+                      id
+                      title
+                      descriptionHtml
+                      vendor
+                      featuredImage {
+                        url
+                        altText
+                      }
+                      images(first: 10) {
+                        edges {
+                          node {
+                            url
+                            altText
+                          }
+                        }
+                      }
+                      variants(first: 1) {
+                        edges {
+                          node {
+                            price {
+                              amount
+                              currencyCode
+                            }
+                            compareAtPrice {
+                              amount
+                              currencyCode
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ''',
+          'variables': {'handle': handle},
+        }),
+      );
+
+      if (response.statusCode != 200) {
+        debugPrint(
+          'Shopify collection products request failed: ${response.statusCode} ${response.body}',
+        );
+        return [];
+      }
+
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      final edges = body['data']?['collection']?['products']?['edges']
+              as List<dynamic>? ??
+          const [];
+
+      final products = edges.map((edge) {
+        final node =
+            (edge as Map<String, dynamic>)['node'] as Map<String, dynamic>? ??
+                <String, dynamic>{};
+
+        final variantEdge =
+            ((node['variants']?['edges'] as List<dynamic>?) ?? const [])
+                    .isNotEmpty
+                ? (node['variants']?['edges'] as List<dynamic>).first
+                        as Map<String, dynamic>? ??
+                    <String, dynamic>{}
+                : <String, dynamic>{};
+
+        final variant = (variantEdge['node'] as Map<String, dynamic>? ??
+            <String, dynamic>{});
+
+        final priceMap =
+            variant['price'] as Map<String, dynamic>? ?? <String, dynamic>{};
+        final compareAtPriceMap =
+            variant['compareAtPrice'] as Map<String, dynamic>? ??
+                <String, dynamic>{};
+
+        final currentPrice = _readMoney(priceMap['amount']);
+        final compareAtPrice = _readMoney(compareAtPriceMap['amount']);
+        final hasDiscount = compareAtPrice > currentPrice && compareAtPrice > 0;
+
+        return ProductModel.fromShopifyMap({
+          'shopifyId': node['id'],
+          'title': node['title'],
+          'vendor': node['vendor'],
+          'description': node['descriptionHtml'],
+          'imageUrl': _readFirstImageUrl(node),
+          'images': _readImageUrls(node),
+          'price': hasDiscount ? compareAtPrice : currentPrice,
+          'salePrice': hasDiscount ? currentPrice : null,
+          'discountPercent': hasDiscount
+              ? ((1 - (currentPrice / compareAtPrice)) * 100).round()
+              : null,
+        });
+      }).toList();
+      return _attachBookmarks(products);
+    } catch (error, stackTrace) {
+      debugPrint('Shopify collection products request error: $error');
+      debugPrintStack(stackTrace: stackTrace);
+      return [];
+    }
+  }
+
+  Future<List<ProductModel>> fetchProducts({int first = 8}) async {
+    return _fetchProducts(first: first);
+  }
+
+  /// Fetches products with a Shopify product tag. Pass `null` to fetch all
+  /// products. The tag value must match the tag configured in Shopify.
+  Future<List<ProductModel>> fetchProductsByTag({
+    String? tag,
+    int first = 50,
+  }) async {
+    return _fetchProducts(first: first, tag: tag);
+  }
+
+  Future<List<ProductModel>> _fetchProducts({
+    required int first,
+    String? tag,
+  }) async {
+    const storeDomain = 'mimsico.myshopify.com';
+    const accessToken = '92c151ad07a7a610b0aeb4003d375f59';
+
+    if (accessToken.isEmpty) {
+      debugPrint('Shopify token is empty.');
+      return [];
+    }
+
+    try {
+      final uri = Uri.https(storeDomain, '/api/2024-04/graphql.json');
+      final response = await _postGraphql(
+        uri: uri,
+        accessToken: accessToken,
+        body: jsonEncode({
+          'query': '''
+            query getProducts(
+              \$first: Int!
+              \$query: String
+            ) {
+              products(first: \$first, sortKey: TITLE, query: \$query) {
                 edges {
                   node {
                     id
@@ -145,167 +285,28 @@ class ShopifyService {
                 }
               }
             }
-          }
-        ''',
-        'variables': {'handle': handle},
-      }),
-    );
-
-    if (response.statusCode != 200) {
-      return [];
-    }
-
-    try {
-      final body = jsonDecode(response.body) as Map<String, dynamic>;
-      final edges = body['data']?['collection']?['products']?['edges']
-              as List<dynamic>? ??
-          const [];
-
-      return edges.map((edge) {
-        final node =
-            (edge as Map<String, dynamic>)['node'] as Map<String, dynamic>? ??
-                <String, dynamic>{};
-
-        final variantEdge =
-            ((node['variants']?['edges'] as List<dynamic>?) ?? const [])
-                    .isNotEmpty
-                ? (node['variants']?['edges'] as List<dynamic>).first
-                        as Map<String, dynamic>? ??
-                    <String, dynamic>{}
-                : <String, dynamic>{};
-
-        final variant = (variantEdge['node'] as Map<String, dynamic>? ??
-            <String, dynamic>{});
-
-        final priceMap =
-            variant['price'] as Map<String, dynamic>? ?? <String, dynamic>{};
-        final compareAtPriceMap =
-            variant['compareAtPrice'] as Map<String, dynamic>? ??
-                <String, dynamic>{};
-
-        final currentPrice = _readMoney(priceMap['amount']);
-        final compareAtPrice = _readMoney(compareAtPriceMap['amount']);
-        final hasDiscount = compareAtPrice > currentPrice && compareAtPrice > 0;
-
-        return ProductModel.fromShopifyMap({
-          'shopifyId': node['id'],
-          'title': node['title'],
-          'vendor': node['vendor'],
-          'description': node['descriptionHtml'],
-          'imageUrl': _readFirstImageUrl(node),
-          'images': _readImageUrls(node),
-          'price': hasDiscount ? compareAtPrice : currentPrice,
-          'salePrice': hasDiscount ? currentPrice : null,
-          'discountPercent': hasDiscount
-              ? ((1 - (currentPrice / compareAtPrice)) * 100).round()
-              : null,
-        });
-      }).toList();
-    } catch (error, stackTrace) {
-      debugPrint('Shopify collection products parsing error: $error');
-      debugPrintStack(stackTrace: stackTrace);
-      return [];
-    }
-  }
-
-  Future<List<ProductModel>> fetchProducts({int first = 8}) async {
-    return _fetchProducts(first: first);
-  }
-
-  /// Fetches products with a Shopify product tag. Pass `null` to fetch all
-  /// products. The tag value must match the tag configured in Shopify.
-  Future<List<ProductModel>> fetchProductsByTag({
-    String? tag,
-    int first = 50,
-  }) async {
-    return _fetchProducts(first: first, tag: tag);
-  }
-
-  Future<List<ProductModel>> _fetchProducts({
-    required int first,
-    String? tag,
-  }) async {
-    const storeDomain = 'mimsico.myshopify.com';
-    const accessToken = '92c151ad07a7a610b0aeb4003d375f59';
-
-    if (accessToken.isEmpty) {
-      debugPrint('Shopify token is empty.');
-      return [];
-    }
-
-    final uri = Uri.https(storeDomain, '/api/2024-04/graphql.json');
-    final response = await _client.post(
-      uri,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': accessToken,
-      },
-      body: jsonEncode({
-        'query': '''
-          query getProducts(
-            \$first: Int!
-            \$query: String
-          ) {
-            products(first: \$first, sortKey: TITLE, query: \$query) {
-              edges {
-                node {
-                  id
-                  title
-                  descriptionHtml
-                  vendor
-                  featuredImage {
-                    url
-                    altText
-                  }
-                  images(first: 10) {
-                    edges {
-                      node {
-                        url
-                        altText
-                      }
-                    }
-                  }
-                  variants(first: 1) {
-                    edges {
-                      node {
-                        price {
-                          amount
-                          currencyCode
-                        }
-                        compareAtPrice {
-                          amount
-                          currencyCode
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        ''',
-        'variables': {
-          'first': first,
-          'query': tag == null || tag.trim().isEmpty
-              ? null
-              : 'tag:${_shopifySearchValue(tag)}',
-        },
-      }),
-    );
-
-    if (response.statusCode != 200) {
-      debugPrint(
-        'Shopify request failed: ${response.statusCode} ${response.body}',
+          ''',
+          'variables': {
+            'first': first,
+            'query': tag == null || tag.trim().isEmpty
+                ? null
+                : 'tag:${_shopifySearchValue(tag)}',
+          },
+        }),
       );
-      return [];
-    }
 
-    try {
+      if (response.statusCode != 200) {
+        debugPrint(
+          'Shopify request failed: ${response.statusCode} ${response.body}',
+        );
+        return [];
+      }
+
       final body = jsonDecode(response.body) as Map<String, dynamic>;
       final edges =
           body['data']?['products']?['edges'] as List<dynamic>? ?? const [];
 
-      return edges.map((edge) {
+      final products = edges.map((edge) {
         final node =
             (edge as Map<String, dynamic>)['node'] as Map<String, dynamic>? ??
                 <String, dynamic>{};
@@ -345,11 +346,74 @@ class ShopifyService {
               : null,
         });
       }).toList();
+      return _attachBookmarks(products);
     } catch (error, stackTrace) {
-      debugPrint('Shopify response parsing error: $error');
+      debugPrint('Shopify request error: $error');
       debugPrintStack(stackTrace: stackTrace);
       return [];
     }
+  }
+
+  Future<http.Response> _postGraphql({
+    required Uri uri,
+    required String accessToken,
+    required String body,
+    int retries = 2,
+  }) async {
+    Object? lastError;
+    for (var attempt = 0; attempt <= retries; attempt++) {
+      try {
+        final response = await _client.post(
+          uri,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Storefront-Access-Token': accessToken,
+          },
+          body: body,
+        );
+
+        if (response.statusCode == 200) {
+          return response;
+        }
+
+        if (response.statusCode >= 500 && attempt < retries) {
+          await Future<void>.delayed(const Duration(milliseconds: 400));
+          continue;
+        }
+
+        return response;
+      } on SocketException catch (error) {
+        lastError = error;
+        if (attempt >= retries) {
+          rethrow;
+        }
+        await Future<void>.delayed(const Duration(milliseconds: 400));
+      } on HttpException catch (error) {
+        lastError = error;
+        if (attempt >= retries) {
+          rethrow;
+        }
+        await Future<void>.delayed(const Duration(milliseconds: 400));
+      } on http.ClientException catch (error) {
+        lastError = error;
+        if (attempt >= retries) {
+          rethrow;
+        }
+        await Future<void>.delayed(const Duration(milliseconds: 400));
+      } catch (error) {
+        lastError = error;
+        if (attempt >= retries) {
+          rethrow;
+        }
+        await Future<void>.delayed(const Duration(milliseconds: 400));
+      }
+    }
+
+    if (lastError != null) {
+      throw lastError;
+    }
+
+    throw const SocketException('Shopify request failed');
   }
 
   String _shopifySearchValue(String value) {
@@ -414,5 +478,25 @@ class ShopifyService {
     }
 
     return urls;
+  }
+
+  Future<List<ProductModel>> _attachBookmarks(
+      List<ProductModel> products) async {
+    if (products.isEmpty) {
+      return products;
+    }
+
+    final bookmarkedKeys = await _picksService.fetchPickKeys();
+    if (bookmarkedKeys.isEmpty) {
+      return products;
+    }
+
+    return products
+        .map(
+          (product) => product.copyWith(
+            isBookmarked: bookmarkedKeys.contains(product.bookmarkKey),
+          ),
+        )
+        .toList();
   }
 }

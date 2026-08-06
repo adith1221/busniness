@@ -167,6 +167,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
             return CollectionProductsScreen(
               categoryTitle: arguments.title,
               tag: arguments.tag,
+              collectionHandle: arguments.collectionHandle,
             );
           }
 

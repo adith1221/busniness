@@ -294,6 +294,10 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                         price: product.price,
                         priceAfetDiscount: product.priceAfetDiscount,
                         dicountpercent: product.dicountpercent,
+                        shopifyId: product.shopifyId,
+                        description: product.description,
+                        images: product.images,
+                        isBookmarked: product.isBookmarked,
                         press: () {
                           Navigator.pushNamed(
                             context,

@@ -7,9 +7,11 @@ class LogInForm extends StatelessWidget {
   const LogInForm({
     super.key,
     required this.formKey,
+    required this.phoneController,
   });
 
   final GlobalKey<FormState> formKey;
+  final TextEditingController phoneController;
 
   @override
   Widget build(BuildContext context) {
@@ -18,46 +20,25 @@ class LogInForm extends StatelessWidget {
       child: Column(
         children: [
           TextFormField(
-            onSaved: (emal) {
-              // Email
+            controller: phoneController,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return "Phone number is required";
+              }
+              if (value.trim().length < 10) {
+                return "Enter a valid phone number";
+              }
+              return null;
             },
-            validator: emaildValidator.call,
             textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.emailAddress,
+            keyboardType: TextInputType.phone,
             decoration: InputDecoration(
-              hintText: "Email address",
+              hintText: "Phone number",
               prefixIcon: Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: defaultPadding * 0.75),
                 child: SvgPicture.asset(
-                  "assets/icons/Message.svg",
-                  height: 24,
-                  width: 24,
-                  colorFilter: ColorFilter.mode(
-                      Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .color!
-                          .withValues(alpha: 0.3),
-                      BlendMode.srcIn),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: defaultPadding),
-          TextFormField(
-            onSaved: (pass) {
-              // Password
-            },
-            validator: passwordValidator.call,
-            obscureText: true,
-            decoration: InputDecoration(
-              hintText: "Password",
-              prefixIcon: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: defaultPadding * 0.75),
-                child: SvgPicture.asset(
-                  "assets/icons/Lock.svg",
+                  "assets/icons/Call.svg",
                   height: 24,
                   width: 24,
                   colorFilter: ColorFilter.mode(

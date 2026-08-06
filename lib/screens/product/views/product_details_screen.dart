@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:busniness/components/buy_full_ui_kit.dart';
 import 'package:busniness/components/cart_button.dart';
 import 'package:busniness/components/custom_modal_bottom_sheet.dart';
@@ -8,6 +7,7 @@ import 'package:busniness/constants.dart';
 import 'package:busniness/models/product_model.dart';
 import 'package:busniness/screens/product/views/product_returns_screen.dart';
 import 'package:busniness/route/screen_export.dart';
+import 'package:busniness/services/picks_service.dart';
 import 'package:busniness/services/shopify_service.dart';
 
 import 'components/notify_me_card.dart';
@@ -33,18 +33,23 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final ShopifyService _shopifyService = ShopifyService();
+  final PicksService _picksService = PicksService();
   late Future<List<ProductModel>> _relatedProductsFuture;
+  bool _isBookmarked = false;
+  bool _isBookmarkBusy = false;
 
   @override
   void initState() {
     super.initState();
     _relatedProductsFuture = _shopifyService.fetchProducts(first: 12);
+    _isBookmarked = widget.product?.isBookmarked ?? false;
   }
 
   @override
   void didUpdateWidget(covariant ProductDetailsScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.product?.shopifyId != oldWidget.product?.shopifyId) {
+      _isBookmarked = widget.product?.isBookmarked ?? false;
       // If the product changes, you might want to refetch related products
       // or just ensure the UI rebuilds with the new product data.
       // For now, we are just rebuilding.
@@ -92,14 +97,57 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               floating: true,
               actions: [
                 IconButton(
-                  onPressed: () {},
-                  icon: SvgPicture.asset(
-                    "assets/icons/Bookmark.svg",
-                    colorFilter: ColorFilter.mode(
-                      Theme.of(context).textTheme.bodyLarge!.color!,
-                      BlendMode.srcIn,
-                    ),
-                  ),
+                  onPressed: _isBookmarkBusy
+                      ? null
+                      : () async {
+                          if (_isBookmarkBusy) {
+                            return;
+                          }
+                          setState(() {
+                            _isBookmarkBusy = true;
+                          });
+                          try {
+                            if (_isBookmarked) {
+                              await _picksService.removePick(selectedProduct);
+                            } else {
+                              await _picksService.addPick(selectedProduct);
+                            }
+                            if (mounted) {
+                              setState(() {
+                                _isBookmarked = !_isBookmarked;
+                              });
+                            }
+                          } catch (error) {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    error
+                                        .toString()
+                                        .replaceFirst('Exception: ', ''),
+                                  ),
+                                ),
+                              );
+                            }
+                          } finally {
+                            if (mounted) {
+                              setState(() {
+                                _isBookmarkBusy = false;
+                              });
+                            }
+                          }
+                        },
+                  icon: _isBookmarkBusy
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Icon(
+                          _isBookmarked
+                              ? Icons.bookmark_rounded
+                              : Icons.bookmark_border_rounded,
+                        ),
                 ),
               ],
             ),
@@ -108,8 +156,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               brand: selectedProduct.brandName.toUpperCase(),
               title: selectedProduct.title,
               isAvailable: widget.isProductAvailable,
-              description: selectedProduct.description ??
-                  "A cool gray cap in soft corduroy. Watch me.' By buying cotton products from Lindex, you’re supporting more responsibly...",
+              description:
+                  selectedProduct.description ?? "No description available",
               rating: 4.4,
               numOfReviews: 126,
             ),
@@ -233,6 +281,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           priceAfetDiscount:
                               relatedProducts[index].priceAfetDiscount,
                           dicountpercent: relatedProducts[index].dicountpercent,
+                          shopifyId: relatedProducts[index].shopifyId,
+                          description: relatedProducts[index].description,
+                          images: relatedProducts[index].images,
+                          isBookmarked: relatedProducts[index].isBookmarked,
                           press: () {
                             Navigator.pushReplacement(
                               context,

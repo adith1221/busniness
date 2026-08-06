@@ -26,9 +26,12 @@ class _CollectionProductsScreenState extends State<CollectionProductsScreen> {
   @override
   void initState() {
     super.initState();
-    _productsFuture = widget.collectionHandle != null
-        ? ShopifyService().fetchCollectionProducts(widget.collectionHandle!)
-        : ShopifyService().fetchProductsByTag(tag: widget.tag);
+    _productsFuture =
+        widget.collectionHandle != null && widget.collectionHandle!.isNotEmpty
+            ? ShopifyService().fetchCollectionProducts(widget.collectionHandle!)
+            : widget.tag != null && widget.tag!.trim().isNotEmpty
+                ? ShopifyService().fetchProductsByTag(tag: widget.tag)
+                : ShopifyService().fetchProducts(first: 20);
   }
 
   @override
@@ -70,6 +73,10 @@ class _CollectionProductsScreenState extends State<CollectionProductsScreen> {
                 price: product.price,
                 priceAfetDiscount: product.priceAfetDiscount,
                 dicountpercent: product.dicountpercent,
+                shopifyId: product.shopifyId,
+                description: product.description,
+                images: product.images,
+                isBookmarked: product.isBookmarked,
                 press: () {},
               );
             },
@@ -81,8 +88,13 @@ class _CollectionProductsScreenState extends State<CollectionProductsScreen> {
 }
 
 class CategoryProductsArguments {
-  const CategoryProductsArguments({required this.title, this.tag});
+  const CategoryProductsArguments({
+    required this.title,
+    this.tag,
+    this.collectionHandle,
+  });
 
   final String title;
   final String? tag;
+  final String? collectionHandle;
 }

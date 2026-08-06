@@ -4,7 +4,6 @@ import 'package:busniness/constants.dart';
 import 'package:busniness/route/route_constants.dart';
 import 'package:busniness/screens/auth/views/components/sign_up_form.dart';
 import 'package:busniness/services/auth_service.dart';
-import 'package:busniness/services/token_service.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -81,14 +80,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
           if (!mounted) return;
 
-          if (registerResponse["statusCode"] == 201) {
-            // 4. Save tokens
-            await TokenService().saveTokens(
-              accessToken: registerResponse["body"]["access"],
-              refreshToken: registerResponse["body"]["refresh"],
-            );
-
-            // 5. Navigate to home
+          if (registerResponse["statusCode"] == 201 ||
+              registerResponse["statusCode"] == 200) {
+            // 4. Navigate to home (tokens are saved by AuthService)
             Navigator.pushNamedAndRemoveUntil(
               context,
               entryPointScreenRoute,

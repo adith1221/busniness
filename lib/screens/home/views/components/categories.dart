@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:busniness/route/route_constants.dart';
+import 'package:busniness/services/shopify_service.dart';
 import '../../../../constants.dart';
 import '../../../collection/views/collection_products_screen.dart';
 
@@ -11,60 +12,76 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> {
-  static const _categories = <_HomeCategory>[
-    _HomeCategory(label: 'All', icon: Icons.storefront_rounded),
-    _HomeCategory(
-        label: 'Girl Fashion', tag: 'Girls', icon: Icons.girl_rounded),
-    _HomeCategory(label: 'Boy Fashion', tag: 'Boys', icon: Icons.boy_rounded),
-    _HomeCategory(label: 'Toys & Craft', tag: 'Toys', icon: Icons.toys_rounded),
-    _HomeCategory(
-        label: 'Daily Care',
-        tag: 'Baby Care',
-        icon: Icons.baby_changing_station_rounded),
-  ];
-
+  late final Future<List<ShopifyCollection>> _collectionsFuture;
   int _selectedIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _collectionsFuture = ShopifyService().fetchCollections();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: List.generate(
-          _categories.length,
-          (index) {
-            final category = _categories[index];
-            return Padding(
-              padding: EdgeInsets.only(
-                left: index == 0 ? defaultPadding : 6,
-                right: index == _categories.length - 1 ? defaultPadding : 0,
-              ),
-              child: CategoryBtn(
-                category: category.label,
-                icon: category.icon,
-                isActive: _selectedIndex == index,
-                press: () {
-                  setState(() => _selectedIndex = index);
-                  Navigator.pushNamed(
-                    context,
-                    collectionProductsScreenRoute,
-                    arguments: CategoryProductsArguments(
-                      title: category.label,
-                      tag: category.tag,
-                    ),
-                  );
-                },
-              ),
-            );
-          },
-        ),
-      ),
+    return FutureBuilder<List<ShopifyCollection>>(
+      future: _collectionsFuture,
+      builder: (context, snapshot) {
+        final collections = snapshot.data ?? const <ShopifyCollection>[];
+        final categories = <_HomeCategory>[
+          const _HomeCategory(label: 'All', icon: Icons.storefront_rounded),
+          ...collections.map(
+            (collection) => _HomeCategory(
+              label: collection.title,
+              icon: Icons.category_rounded,
+              tag: collection.handle,
+            ),
+          ),
+        ];
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(
+              categories.length,
+              (index) {
+                final category = categories[index];
+                return Padding(
+                  padding: EdgeInsets.only(
+                    left: index == 0 ? defaultPadding : 6,
+                    right: index == categories.length - 1 ? defaultPadding : 0,
+                  ),
+                  child: CategoryBtn(
+                    category: category.label,
+                    icon: category.icon,
+                    isActive: _selectedIndex == index,
+                    press: () {
+                      setState(() => _selectedIndex = index);
+                      Navigator.pushNamed(
+                        context,
+                        collectionProductsScreenRoute,
+                        arguments: CategoryProductsArguments(
+                          title: category.label,
+                          collectionHandle: category.tag,
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }
 
 class _HomeCategory {
-  const _HomeCategory({required this.label, required this.icon, this.tag});
+  const _HomeCategory({
+    required this.label,
+    required this.icon,
+    this.tag,
+  });
 
   final String label;
   final IconData icon;

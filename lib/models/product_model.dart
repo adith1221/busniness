@@ -1,4 +1,3 @@
-// For demo only
 import 'package:busniness/constants.dart';
 
 String _stringOrFallback(dynamic value, String fallback) {
@@ -10,13 +9,16 @@ String _stringOrFallback(dynamic value, String fallback) {
 }
 
 class ProductModel {
-  final String image, brandName, title;
+  final String image;
+  final String brandName;
+  final String title;
   final List<String> images;
   final String? shopifyId;
   final double price;
   final double? priceAfetDiscount;
   final int? dicountpercent;
   final String? description;
+  final bool isBookmarked;
 
   ProductModel({
     required this.image,
@@ -28,11 +30,45 @@ class ProductModel {
     this.priceAfetDiscount,
     this.dicountpercent,
     this.description,
+    this.isBookmarked = false,
   });
+
+  String get bookmarkKey {
+    if (shopifyId != null && shopifyId!.trim().isNotEmpty) {
+      return shopifyId!;
+    }
+    return '${brandName.toLowerCase().trim()}::${title.toLowerCase().trim()}';
+  }
+
+  ProductModel copyWith({
+    String? image,
+    String? brandName,
+    String? title,
+    List<String>? images,
+    String? shopifyId,
+    double? price,
+    double? priceAfetDiscount,
+    int? dicountpercent,
+    String? description,
+    bool? isBookmarked,
+  }) {
+    return ProductModel(
+      image: image ?? this.image,
+      brandName: brandName ?? this.brandName,
+      title: title ?? this.title,
+      images: images ?? this.images,
+      shopifyId: shopifyId ?? this.shopifyId,
+      price: price ?? this.price,
+      priceAfetDiscount: priceAfetDiscount ?? this.priceAfetDiscount,
+      dicountpercent: dicountpercent ?? this.dicountpercent,
+      description: description ?? this.description,
+      isBookmarked: isBookmarked ?? this.isBookmarked,
+    );
+  }
 
   factory ProductModel.fromShopifyMap(Map<String, dynamic> data) {
     final title = _stringOrFallback(data['title'], 'Untitled product');
-    final brandName = _stringOrFallback(data['vendor'], 'Shopify Store');
+    final brandName = _stringOrFallback(data['vendor'], 'Store');
 
     final rawImages = (data['images'] as List<dynamic>? ?? const [])
         .whereType<String>()
@@ -59,152 +95,31 @@ class ProductModel {
       priceAfetDiscount: hasDiscount ? salePrice : null,
       dicountpercent: hasDiscount ? discountPercent : null,
       description: description,
+      isBookmarked: (data['isBookmarked'] as bool?) ?? false,
+    );
+  }
+
+  factory ProductModel.fromPickMap(Map<String, dynamic> data) {
+    final image = _stringOrFallback(data['image'], productDemoImg1);
+    final brandName = _stringOrFallback(data['brand_name'], 'Store');
+    final title = _stringOrFallback(data['title'], 'Product');
+    final price = (data['price'] as num?)?.toDouble() ?? 0.0;
+    final salePrice = (data['sale_price'] as num?)?.toDouble();
+    final discountPercent = data['discount_percent'] as int?;
+    final description = data['description'] as String?;
+    final shopifyId = data['shopify_id'] as String?;
+
+    return ProductModel(
+      image: image,
+      images: [image],
+      shopifyId: shopifyId,
+      brandName: brandName,
+      title: title,
+      price: price,
+      priceAfetDiscount: salePrice,
+      dicountpercent: discountPercent,
+      description: description,
+      isBookmarked: true,
     );
   }
 }
-
-List<ProductModel> demoPopularProducts = [
-  ProductModel(
-    image: productDemoImg1,
-    title: "Mountain Warehouse for Women",
-    brandName: "Lipsy london",
-    price: 540,
-    priceAfetDiscount: 420,
-    dicountpercent: 20,
-  ),
-  ProductModel(
-    image: productDemoImg4,
-    title: "Mountain Beta Warehouse",
-    brandName: "Lipsy london",
-    price: 800,
-  ),
-  ProductModel(
-    image: productDemoImg5,
-    title: "FS - Nike Air Max 270 Really React",
-    brandName: "Lipsy london",
-    price: 650.62,
-    priceAfetDiscount: 390.36,
-    dicountpercent: 40,
-  ),
-  ProductModel(
-    image: productDemoImg6,
-    title: "Green Poplin Ruched Front",
-    brandName: "Lipsy london",
-    price: 1264,
-    priceAfetDiscount: 1200.8,
-    dicountpercent: 5,
-  ),
-  ProductModel(
-    image: "https://i.imgur.com/tXyOMMG.png",
-    title: "Green Poplin Ruched Front",
-    brandName: "Lipsy london",
-    price: 650.62,
-    priceAfetDiscount: 390.36,
-    dicountpercent: 40,
-  ),
-  ProductModel(
-    image: "https://i.imgur.com/h2LqppX.png",
-    title: "white satin corset top",
-    brandName: "Lipsy london",
-    price: 1264,
-    priceAfetDiscount: 1200.8,
-    dicountpercent: 5,
-  ),
-];
-
-List<ProductModel> demoFlashSaleProducts = [
-  ProductModel(
-    image: productDemoImg5,
-    title: "FS - Nike Air Max 270 Really React",
-    brandName: "Lipsy london",
-    price: 650.62,
-    priceAfetDiscount: 390.36,
-    dicountpercent: 40,
-  ),
-  ProductModel(
-    image: productDemoImg6,
-    title: "Green Poplin Ruched Front",
-    brandName: "Lipsy london",
-    price: 1264,
-    priceAfetDiscount: 1200.8,
-    dicountpercent: 5,
-  ),
-  ProductModel(
-    image: productDemoImg4,
-    title: "Mountain Beta Warehouse",
-    brandName: "Lipsy london",
-    price: 800,
-    priceAfetDiscount: 680,
-    dicountpercent: 15,
-  ),
-];
-
-List<ProductModel> demoBestSellersProducts = [
-  ProductModel(
-    image: "https://i.imgur.com/tXyOMMG.png",
-    title: "Green Poplin Ruched Front",
-    brandName: "Lipsy london",
-    price: 650.62,
-    priceAfetDiscount: 390.36,
-    dicountpercent: 40,
-  ),
-  ProductModel(
-    image: "https://i.imgur.com/h2LqppX.png",
-    title: "white satin corset top",
-    brandName: "Lipsy london",
-    price: 1264,
-    priceAfetDiscount: 1200.8,
-    dicountpercent: 5,
-  ),
-  ProductModel(
-    image: productDemoImg4,
-    title: "Mountain Beta Warehouse",
-    brandName: "Lipsy london",
-    price: 800,
-    priceAfetDiscount: 680,
-    dicountpercent: 15,
-  ),
-];
-
-List<ProductModel> kidsProducts = [
-  ProductModel(
-    image: "https://i.imgur.com/dbbT6PA.png",
-    title: "Green Poplin Ruched Front",
-    brandName: "Lipsy london",
-    price: 650.62,
-    priceAfetDiscount: 590.36,
-    dicountpercent: 24,
-  ),
-  ProductModel(
-    image: "https://i.imgur.com/7fSxC7k.png",
-    title: "Printed Sleeveless Tiered Swing Dress",
-    brandName: "Lipsy london",
-    price: 650.62,
-  ),
-  ProductModel(
-    image: "https://i.imgur.com/pXnYE9Q.png",
-    title: "Ruffle-Sleeve Ponte-Knit Sheath ",
-    brandName: "Lipsy london",
-    price: 400,
-  ),
-  ProductModel(
-    image: "https://i.imgur.com/V1MXgfa.png",
-    title: "Green Mountain Beta Warehouse",
-    brandName: "Lipsy london",
-    price: 400,
-    priceAfetDiscount: 360,
-    dicountpercent: 20,
-  ),
-  ProductModel(
-    image: "https://i.imgur.com/8gvE5Ss.png",
-    title: "Printed Sleeveless Tiered Swing Dress",
-    brandName: "Lipsy london",
-    price: 654,
-  ),
-  ProductModel(
-    image: "https://i.imgur.com/cBvB5YB.png",
-    title: "Mountain Beta Warehouse",
-    brandName: "Lipsy london",
-    price: 250,
-  ),
-];

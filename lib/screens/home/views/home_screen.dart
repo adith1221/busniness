@@ -595,7 +595,7 @@ class _CollectionGrid extends StatelessWidget {
                     collectionProductsScreenRoute,
                     arguments: CategoryProductsArguments(
                       title: collection.title,
-                      tag: collection.handle,
+                      collectionHandle: collection.handle,
                     ),
                   ),
                 );

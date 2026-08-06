@@ -27,7 +27,7 @@ class _DecisionScreenState extends State<DecisionScreen> {
     if (loggedIn) {
       Navigator.pushReplacementNamed(context, entryPointScreenRoute);
     } else {
-      Navigator.pushReplacementNamed(context, onbordingScreenRoute);
+      Navigator.pushReplacementNamed(context, logInScreenRoute);
     }
   }
 

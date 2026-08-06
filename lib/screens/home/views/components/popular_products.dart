@@ -78,6 +78,10 @@ class _PopularProductsState extends State<PopularProducts> {
                     price: products[index].price,
                     priceAfetDiscount: products[index].priceAfetDiscount,
                     dicountpercent: products[index].dicountpercent,
+                    shopifyId: products[index].shopifyId,
+                    description: products[index].description,
+                    images: products[index].images,
+                    isBookmarked: products[index].isBookmarked,
                     press: () {
                       Navigator.pushNamed(
                         context,

@@ -61,19 +61,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Wrap(
-                spacing: 8,
-                children: ['New In', 'Sale', 'Accessories', 'Essentials']
-                    .map((tag) => ChoiceChip(
-                        label: Text(tag),
-                        selected: tag == 'New In',
-                        onSelected: (_) {}))
-                    .toList(),
-              ),
-            ),
-            const SizedBox(height: defaultPadding),
             Expanded(
               child: FutureBuilder<List<ProductModel>>(
                 future: _productsFuture,
@@ -91,29 +78,70 @@ class _SearchScreenState extends State<SearchScreen> {
                     return const Center(child: Text('No matching products'));
                   }
 
-                  return GridView.builder(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: defaultPadding),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.7,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                    ),
-                    itemCount: products.length,
-                    itemBuilder: (context, index) {
-                      final product = products[index];
-                      return ProductCard(
-                        image: product.image,
-                        brandName: product.brandName,
-                        title: product.title,
-                        price: product.price,
-                        priceAfetDiscount: product.priceAfetDiscount,
-                        dicountpercent: product.dicountpercent,
-                        press: () {},
-                      );
-                    },
+                  final tags = products
+                      .map((product) => product.brandName.trim())
+                      .where((tag) => tag.isNotEmpty)
+                      .toSet()
+                      .take(4)
+                      .toList();
+
+                  return Column(
+                    children: [
+                      if (tags.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: defaultPadding),
+                          child: Wrap(
+                            spacing: 8,
+                            children: tags
+                                .map(
+                                  (tag) => ChoiceChip(
+                                    label: Text(tag),
+                                    selected: false,
+                                    onSelected: (_) {
+                                      _controller.text = tag;
+                                      setState(() {
+                                        _query = tag;
+                                      });
+                                    },
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      const SizedBox(height: defaultPadding),
+                      Expanded(
+                        child: GridView.builder(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: defaultPadding,
+                          ),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.7,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                          ),
+                          itemCount: products.length,
+                          itemBuilder: (context, index) {
+                            final product = products[index];
+                            return ProductCard(
+                              image: product.image,
+                              brandName: product.brandName,
+                              title: product.title,
+                              price: product.price,
+                              priceAfetDiscount: product.priceAfetDiscount,
+                              dicountpercent: product.dicountpercent,
+                              shopifyId: product.shopifyId,
+                              description: product.description,
+                              images: product.images,
+                              isBookmarked: product.isBookmarked,
+                              press: () {},
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),

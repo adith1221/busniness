@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:busniness/services/api_service.dart';
+import 'package:busniness/services/auth_service.dart';
 
 class OtpScreen extends StatefulWidget {
   final String phoneNumber;
@@ -36,11 +36,16 @@ class _OtpScreenState extends State<OtpScreen> {
     });
 
     try {
-      // 1. Verify OTP and get tokens
-      await ApiService.verifyOtp(
-        widget.phoneNumber,
-        _otpController.text.trim(),
+      final response = await AuthService().verifyOTP(
+        phone: widget.phoneNumber,
+        otp: _otpController.text.trim(),
       );
+
+      if (response["statusCode"] != 200) {
+        throw Exception(
+          (response["body"]?["message"] ?? "Verification failed").toString(),
+        );
+      }
 
       if (mounted) {
         Navigator.pop(context, true);
@@ -89,7 +94,7 @@ class _OtpScreenState extends State<OtpScreen> {
               else
                 ElevatedButton(
                   onPressed: _verifyAndRegister,
-                  child: const Text("Verify & Register"),
+                  child: Text(widget.isLoginFlow ? "Verify & Login" : "Verify"),
                 ),
               if (_errorMessage != null) ...[
                 const SizedBox(height: 10),
